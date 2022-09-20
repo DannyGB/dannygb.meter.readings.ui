@@ -1,0 +1,14 @@
+.DS_STORE
+
+dist
+*.log
+node_modules
+*.swo
+*.swp
+.vimrc
+.nvimrc
+*secret.js
+npm-debug.log
+yarn-error.log
+.ng-dev.user*
+.angular

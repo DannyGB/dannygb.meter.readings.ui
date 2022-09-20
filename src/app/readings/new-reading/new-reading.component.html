@@ -1,0 +1,11 @@
+<div mat-dialog-content>
+  <p>Please enter a reading</p>
+  <mat-form-field appearance="fill">
+    <mat-label>Reading</mat-label>
+    <input matInput [(ngModel)]="data.reading">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button [mat-dialog-close]="data.reading" cdkFocusInitial>Ok</button>
+</div>
