@@ -10,14 +10,34 @@
     </button>
 </mat-toolbar>
 
-<table mat-table [dataSource]="readings" class="mat-elevation-z8 reading-table">
+<table mat-table [dataSource]="readings" 
+  matSort 
+  (matSortChange)="onSortChange($event)"
+  matSortActive="readingdate"
+  matSortDirection="desc"
+  class="mat-elevation-z8 reading-table">
     <ng-container matColumnDef="reading">
         <th mat-header-cell *matHeaderCellDef> Reading </th>
         <td mat-cell *matCellDef="let reading"> {{reading.reading}} </td>        
       </ng-container>
       <ng-container matColumnDef="readingdate">
-        <th mat-header-cell *matHeaderCellDef> Date </th>
-        <td mat-cell *matCellDef="let reading"> {{reading.readingdate}} </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+        <td mat-cell *matCellDef="let reading"> {{reading.readingdate | date : 'mediumDate' : 'UTC'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="note">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Note </th>
+        <td mat-cell *matCellDef="let reading"> {{reading.note}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> Delete </th>
+        <td mat-cell *matCellDef="let reading">
+          <button mat-icon-button
+            (click)="deleteReading(reading._id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
       </ng-container>
     <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
     <tr mat-row *matRowDef="let reading; columns: columnsToDisplay"></tr>

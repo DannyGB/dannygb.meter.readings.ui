@@ -9,10 +9,15 @@ import { Reading } from "../readings.model";
   export class NewReadingDialog {
     constructor(
       public dialogRef: MatDialogRef<NewReadingDialog>,
-      @Inject(MAT_DIALOG_DATA) public data: Reading,
+      @Inject(MAT_DIALOG_DATA) public data: NewReadingData,
     ) {}
   
     onNoClick(): void {
       this.dialogRef.close();
     }
+  }
+
+  export interface NewReadingData {
+    reading: Reading,
+    lastReading: number
   }

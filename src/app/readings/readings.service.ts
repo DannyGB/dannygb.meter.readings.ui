@@ -1,35 +1,64 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import * as moment from 'moment';
 
-import { of, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Config, ConfigService } from '../config.service';
 import { Reading } from './readings.model';
 
 @Injectable({ providedIn: 'root' })
 export class ReadingsService {
-  constructor(private http: HttpClient) {}
 
-  public getReadings(skip: number, pageLength: number): Observable<Array<Reading>> {
+  private config: Config | undefined;
+  private baseRoute: string = "reading";
+
+  constructor(private http: HttpClient, private configService: ConfigService) {
+    this.config = configService.config;
+  }
+
+  public getReadings(skip: number, pageLength: number, sortDirection: string): Observable<Array<Reading>> {
+
     return this.http
       .get<Reading[]>(
-        `http://localhost:8000/reading/?skip=${skip}&take=${pageLength}`
+        `${this.getUrl()}/?skip=${skip}&take=${pageLength}&sort=${sortDirection}`
       )
-      .pipe(map((readings) => readings || []));
+      .pipe(map((readings) => {
+        if (!readings) {
+          return [];
+        }
+
+        return readings.map(reading => {
+          reading.readingdate = moment(reading.readingdate);
+          return reading;
+        });
+      }));
   }
 
   public getReadingCount(): Observable<number> {
     return this.http
       .get<number>(
-        `http://localhost:8000/reading/count`
+        `${this.getUrl()}/count`
       )
       .pipe(map((count) => count || 0));
   }
 
   public addReading(reading: Reading): Observable<object> {
     return this.http
-      .post(`http://localhost:8000/reading/${reading._id}`,
-      reading
-    )
-    .pipe(map((location) => location || ""));
+      .post(
+        `${this.getUrl()}/${reading._id}`, reading
+      )
+      .pipe(map((location) => location || ""));
+  }
+
+  public deleteReading(id: string): Observable<object> {
+    return this.http
+      .delete(
+        `${this.getUrl()}/${id}`
+        );
+  }
+
+  private getUrl(): string {
+    return `${this.config?.apiUrl}/${this.baseRoute}`;
   }
 }

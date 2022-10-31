@@ -8,9 +8,29 @@
     padding-right: 24px;
     text-align: center;
   }
+
+  .mat-column-id {
+    width: 32px;
+    border-left: 1px solid currentColor;
+    border-right: 1px solid currentColor;
+    padding: 0 15px;
+    text-align: center;
+  }
+
+  .mat-column-readingdate {
+    width: 90px;
+    border-left: 1px solid currentColor;
+    border-right: 1px solid currentColor;
+    padding: 0 15px;
+    text-align: center;
+  }
+
+  .mat-column-note {
+    padding: 0 15px;
+  }
   
   .mat-column-readingdate {
-    padding-left: 16px;
+    padding-left: 15px;
   }
 
   .spacer {

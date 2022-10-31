@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ReadingListComponent } from './reading-list/reading-list.component';
 
 const routes: Routes = [
-  {path: 'readings', component: ReadingListComponent}
+  {path: 'readings', title: 'Readings', component: ReadingListComponent}
 ];
 
 @NgModule({

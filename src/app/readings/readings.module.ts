@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { ReadingsComponent } from './readings.component';
@@ -16,14 +16,25 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { FormsModule } from '@angular/forms'; 
 import { NewReadingDialog } from './new-reading/new-reading.component';
+import { MAT_DATE_LOCALE } from '@angular/material/core'
+import { ConfigService } from '../config.service';
+import { DeleteReadingComponent } from './delete-reading/delete-reading.component';
+import { MatSortModule } from '@angular/material/sort';
+
+export const configFactory = (configService: ConfigService) => {
+  return () => configService.loadConfig();
+};
 
 @NgModule({
   declarations: [  
     ReadingsComponent,  
     ReadingListComponent,
-    NewReadingDialog
+    NewReadingDialog,
+    DeleteReadingComponent
   ],
   imports: [
     BrowserModule,
@@ -39,9 +50,15 @@ import { NewReadingDialog } from './new-reading/new-reading.component';
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
+    MatDatepickerModule,
+    MatMomentDateModule,
+    MatSortModule,
   ],
   providers: [
-    
+    MatDatepickerModule,
+    {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
+    {provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: {useUtc: true}},
+    {provide: APP_INITIALIZER, useFactory: configFactory, deps: [ConfigService], multi: true}
   ]  
 })
 export class ReadingsModule { }
