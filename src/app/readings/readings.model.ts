@@ -3,4 +3,5 @@ export interface Reading {
     reading: number;
     readingdate: any;
     note: string;
+    rate: string;
 }

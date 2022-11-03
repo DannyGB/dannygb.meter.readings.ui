@@ -23,6 +23,9 @@
     "@angular/router": "^14.2.0",
     "@ngrx/store": "^14.3.1",
     "angular2-uuid": "^1.1.1",
+    "chart.js": "^3.9.1",
+    "primeicons": "^6.0.1",
+    "primeng": "^14.1.2",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

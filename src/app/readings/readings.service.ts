@@ -7,6 +7,13 @@ import { map } from 'rxjs/operators';
 import { Config, ConfigService } from '../config.service';
 import { Reading } from './readings.model';
 
+export interface GetParameters {
+  skip: number;
+  take: number;
+  sortDirection: string;
+  filterText: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ReadingsService {
 
@@ -17,11 +24,11 @@ export class ReadingsService {
     this.config = configService.config;
   }
 
-  public getReadings(skip: number, pageLength: number, sortDirection: string): Observable<Array<Reading>> {
+  public getReadings(parameters: GetParameters): Observable<Array<Reading>> {
 
     return this.http
       .get<Reading[]>(
-        `${this.getUrl()}/?skip=${skip}&take=${pageLength}&sort=${sortDirection}`
+        `${this.getUrl()}/?skip=${parameters.skip}&take=${parameters.take}&sort=${parameters.sortDirection}&filter=${parameters.filterText}`
       )
       .pipe(map((readings) => {
         if (!readings) {
@@ -35,10 +42,10 @@ export class ReadingsService {
       }));
   }
 
-  public getReadingCount(): Observable<number> {
+  public getReadingCount(filterText: string): Observable<number> {
     return this.http
       .get<number>(
-        `${this.getUrl()}/count`
+        `${this.getUrl()}/count?filter=${filterText}`
       )
       .pipe(map((count) => count || 0));
   }

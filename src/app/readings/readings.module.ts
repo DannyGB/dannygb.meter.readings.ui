@@ -24,6 +24,10 @@ import { MAT_DATE_LOCALE } from '@angular/material/core'
 import { ConfigService } from '../config.service';
 import { DeleteReadingComponent } from './delete-reading/delete-reading.component';
 import { MatSortModule } from '@angular/material/sort';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCardModule } from '@angular/material/card'; 
+import { ChartModule } from 'primeng/chart';
+import { ReadingChartComponent } from './reading-chart/reading-chart.component';
 
 export const configFactory = (configService: ConfigService) => {
   return () => configService.loadConfig();
@@ -34,7 +38,8 @@ export const configFactory = (configService: ConfigService) => {
     ReadingsComponent,  
     ReadingListComponent,
     NewReadingDialog,
-    DeleteReadingComponent
+    DeleteReadingComponent,
+    ReadingChartComponent
   ],
   imports: [
     BrowserModule,
@@ -53,6 +58,9 @@ export const configFactory = (configService: ConfigService) => {
     MatDatepickerModule,
     MatMomentDateModule,
     MatSortModule,
+    MatRadioModule,
+    MatCardModule,
+    ChartModule,
   ],
   providers: [
     MatDatepickerModule,
