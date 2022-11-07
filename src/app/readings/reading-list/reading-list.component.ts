@@ -5,10 +5,14 @@ import { addReading, removeReading } from '../state/readings.actions';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Reading } from '../readings.model';
 import { MatDialog } from '@angular/material/dialog';
-import { NewReadingDialog } from '../new-reading/new-reading.component';
+import { NewReadingData, NewReadingDialog } from '../new-reading/new-reading.component';
 import { UUID } from 'angular2-uuid';
 import { DeleteReadingComponent } from '../delete-reading/delete-reading.component';
 import { ReadingDataSource } from '../reading.datasource';
+import { filter, zipWith } from 'rxjs';
+import * as moment from 'moment';
+import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
+import { AuthenticationResult, EventMessage, EventType, InteractionStatus } from '@azure/msal-browser';
 
 @Component({
   selector: 'app-reading-list',
@@ -31,7 +35,9 @@ export class ReadingListComponent implements OnInit {
   constructor(
     private readingsService: ReadingsService,
     private store: Store,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private authService: MsalService,
+    private msalBroadcastService: MsalBroadcastService
   ) {}
 
   public ngOnInit(): void {
@@ -42,32 +48,44 @@ export class ReadingListComponent implements OnInit {
   public addNewReading(): void {
 
     const dialogRef = this.dialog.open(NewReadingDialog, {
-      width: "300px",
+      width: "500px",
       data: { 
-        reading: {           
-          readingdate: new Date().toISOString() },
-          lastReading: this.dataSource.data.length ? this.dataSource.data[0].reading : 0,
-          rate: "Day"
-        }
+        dayReading: {
+          readingdate: moment()
+        },
+        nightReading: {},
+        lastDayReading: this.readingsService.getLastDayReading(this.dataSource.data),
+        lastNightReading: this.readingsService.getLastNightReading(this.dataSource.data),
+      }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result: NewReadingData) => {
       if(!result) {
         return;
       }
 
-      const reading: Reading = {
+      const dayReading: Reading = {
         _id: UUID.UUID(),
-        reading: Number(result.reading),
-        readingdate: result.readingdate,
-        note: result.note,
-        rate: result.rate
+        reading: Number(result.dayReading.reading),
+        readingdate: result.dayReading.readingdate,
+        note: result.dayReading.note,
+        rate: "Day"
       };
 
-      if(reading.reading > 0) { // TODO: Validation
-        this.readingsService.addReading(reading).subscribe((location: any) => {
-          console.log(location);
-          this.store.dispatch(addReading({reading}));
+      const nightReading: Reading = {
+        _id: UUID.UUID(),
+        reading: Number(result.nightReading.reading),
+        readingdate: result.dayReading.readingdate,
+        note: result.dayReading.note,
+        rate: "Night"
+      };
+
+      if(dayReading.reading > 0 && nightReading.reading > 0) { // TODO: Validation
+        this.readingsService.addReading(dayReading)
+          .pipe(zipWith(this.readingsService.addReading(nightReading)))
+          .subscribe((location: any) => {
+            this.store.dispatch(addReading({ reading: dayReading }));
+            this.store.dispatch(addReading({ reading: nightReading }));
         });
       }
     });
@@ -103,5 +121,5 @@ export class ReadingListComponent implements OnInit {
 
   public toggleChart(): void {
     this.chartVisible = !this.chartVisible;
-  }
+  }  
 }

@@ -1,6 +1,6 @@
 
 <mat-toolbar>
-    <span>Meter Readings</span>
+    <span>Meter Readings</span>    
     <span class="spacer"></span>
     <button mat-icon-button 
       (click)="addNewReading()"
@@ -9,7 +9,7 @@
       title="Add new reading">
       <mat-icon>add</mat-icon>
     </button>
-    <button mat-icon-button 
+    <button mat-icon-button id="toggle-chart"
       (click)="toggleChart()"
       data-test="chart-toggle"
       aria-label="Toggle chart visibility"
@@ -18,7 +18,7 @@
     </button>
 </mat-toolbar>
 
-<mat-card *ngIf="chartVisible">
+<mat-card *ngIf="chartVisible">  
   <app-reading-chart></app-reading-chart>
 </mat-card>
 

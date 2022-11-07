@@ -1,1 +1,9 @@
-<p-chart type="line" [data]="data" [options]="options" width="100vw" height="40vh"></p-chart>
+<div class="parent">
+    <div>
+        <mat-card-title>Per day units</mat-card-title>
+        <app-reading-line-chart [data]="data" [options]="options"></app-reading-line-chart>            
+    </div>
+    <div>
+        <app-reading-pie-chart [data]="donutData" [options]="donutOptions"></app-reading-pie-chart>            
+    </div>
+</div>

@@ -68,4 +68,35 @@ export class ReadingsService {
   private getUrl(): string {
     return `${this.config?.apiUrl}/${this.baseRoute}`;
   }
+
+  public sortByReadingDesc(a: Reading, b: Reading): number {
+    return this.sortByReading(a, b, "desc");
+  }
+
+  public sortByReadingAsc(a: Reading, b: Reading): number {
+    return this.sortByReading(a, b, "asc");
+  }
+
+  public sortByReading(a: Reading, b: Reading, direction: string): number {
+    return direction === "asc"
+      ? a.reading > b.reading ? 1 : -1
+      : a.reading < b.reading ? 1 : -1
+  } 
+
+  public separateDataByRate(readings: Reading[], rate: string): Reading[] {
+    return [...readings]
+      .filter(e => e.rate.toLocaleLowerCase() == rate)      
+  }
+
+  public getLastDayReading(readings: Reading[]): number {
+    return readings.length 
+      ? this.separateDataByRate(readings, "day")
+          .sort(this.sortByReadingDesc.bind(this))[0].reading : 0;
+  }
+
+  public getLastNightReading(readings: Reading[]): number {
+    return readings.length 
+      ? this.separateDataByRate(readings, "night")
+          .sort(this.sortByReadingDesc.bind(this))[0].reading : 0;
+  }
 }

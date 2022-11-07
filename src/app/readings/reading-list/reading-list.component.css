@@ -40,3 +40,9 @@
   #filter-form-field {
     width: 100%;
   }
+
+  @media (max-width: 768px) {
+    #toggle-chart {
+        display: none;
+    }
+  }

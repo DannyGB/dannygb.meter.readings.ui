@@ -1,32 +1,35 @@
 <form #readingForm="ngForm">
   <div mat-dialog-content>
+    
     <p>Please enter a reading:</p>
+
     <mat-form-field appearance="fill">
-      <mat-label>Reading</mat-label>    
-      <input matInput name="reading" [required]="true" [(ngModel)]="data.reading.reading">
-      <mat-hint align="end">Last reading was: {{data.lastReading}}</mat-hint>    
+      <mat-label>Day Reading</mat-label>    
+      <input matInput name="reading" [required]="true" [(ngModel)]="data.dayReading.reading">
+      <mat-hint align="end">Last reading was: {{data.lastDayReading}}</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Night Reading</mat-label>    
+      <input matInput name="reading" [required]="true" [(ngModel)]="data.nightReading.reading">
+      <mat-hint align="end">Last reading was: {{data.lastNightReading}}</mat-hint>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Date</mat-label>    
-      <input matInput name="readingdate" [required]="true"  [matDatepicker]="picker" [(ngModel)]="data.reading.readingdate">
+      <input matInput name="readingdate" [required]="true"  [matDatepicker]="picker" [(ngModel)]="data.dayReading.readingdate">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
     
-    <mat-radio-group name="rate" required aria-label="Select an option" [(ngModel)]="data.reading.rate">
-      <mat-radio-button value="Day" name="Day">Day</mat-radio-button>
-      <mat-radio-button value="Night" name="Night">Night</mat-radio-button>
-    </mat-radio-group>
-
     <mat-form-field appearance="fill">
       <mat-label>Note</mat-label>    
-      <textarea matInput name="note" [(ngModel)]="data.reading.note"></textarea>
+      <textarea matInput name="note" [(ngModel)]="data.dayReading.note"></textarea>
     </mat-form-field>
   </div>
 
   <div mat-dialog-actions>
-    <button type="submit" mat-button [mat-dialog-close]="data.reading" cdkFocusInitial [disabled]="!readingForm.form.valid">Ok</button>
+    <button type="submit" mat-button [mat-dialog-close]="data" cdkFocusInitial [disabled]="!readingForm.form.valid">Ok</button>
     <button mat-button (click)="onNoClick()">Cancel</button>    
   </div>
 

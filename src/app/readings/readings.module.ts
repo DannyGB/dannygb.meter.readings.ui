@@ -28,6 +28,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card'; 
 import { ChartModule } from 'primeng/chart';
 import { ReadingChartComponent } from './reading-chart/reading-chart.component';
+import { ReadingPieChartComponent } from './reading-chart/reading-pie-chart/reading-pie-chart.component';
+import { ReadingLineChartComponent } from './reading-chart/reading-line-chart/reading-line-chart.component'; 
 
 export const configFactory = (configService: ConfigService) => {
   return () => configService.loadConfig();
@@ -39,7 +41,9 @@ export const configFactory = (configService: ConfigService) => {
     ReadingListComponent,
     NewReadingDialog,
     DeleteReadingComponent,
-    ReadingChartComponent
+    ReadingChartComponent,
+    ReadingPieChartComponent,
+    ReadingLineChartComponent
   ],
   imports: [
     BrowserModule,
@@ -60,7 +64,7 @@ export const configFactory = (configService: ConfigService) => {
     MatSortModule,
     MatRadioModule,
     MatCardModule,
-    ChartModule,
+    ChartModule
   ],
   providers: [
     MatDatepickerModule,

@@ -23,6 +23,8 @@ import { Reading } from "../readings.model";
   }
 
   export interface NewReadingData {
-    reading: Reading,
-    lastReading: number
+    dayReading: Reading,
+    nightReading: Reading,
+    lastDayReading: number,
+    lastNightReading: number
   }
