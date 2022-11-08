@@ -11,6 +11,7 @@ import { filter, Subject, takeUntil } from 'rxjs';
 export class LoginComponent implements OnInit, OnDestroy {
 
   public loginDisplay = false
+  public name: string | undefined;
   private readonly _destroying$ = new Subject<void>();
 
   constructor(
@@ -68,7 +69,14 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (!activeAccount && this.authService.instance.getAllAccounts().length > 0) {
       let accounts = this.authService.instance.getAllAccounts();
       this.authService.instance.setActiveAccount(accounts[0]);
+      this.name = accounts[0].name;
+
+      return;
+
     }
+
+    this.name = activeAccount?.name;
+
   }
 
   public logout(popup?: boolean) {
