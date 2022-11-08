@@ -22,8 +22,9 @@
               "src/favicon.ico",
               "src/assets"
             ],
-            "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/purple-green.css",
+            "styles": [{
+              "input": "./node_modules/@angular/material/prebuilt-themes/purple-green.css"
+            },
               "src/styles.css"
             ],
             "scripts": ["./node_modules/chart.js/dist/chart.js"]
@@ -33,8 +34,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",

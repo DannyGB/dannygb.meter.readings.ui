@@ -21,7 +21,6 @@ import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/m
 import { FormsModule } from '@angular/forms'; 
 import { NewReadingDialog } from './new-reading/new-reading.component';
 import { MAT_DATE_LOCALE } from '@angular/material/core'
-import { ConfigService } from '../config.service';
 import { DeleteReadingComponent } from './delete-reading/delete-reading.component';
 import { MatSortModule } from '@angular/material/sort';
 import { MatRadioModule } from '@angular/material/radio';
@@ -30,10 +29,6 @@ import { ChartModule } from 'primeng/chart';
 import { ReadingChartComponent } from './reading-chart/reading-chart.component';
 import { ReadingPieChartComponent } from './reading-chart/reading-pie-chart/reading-pie-chart.component';
 import { ReadingLineChartComponent } from './reading-chart/reading-line-chart/reading-line-chart.component'; 
-
-export const configFactory = (configService: ConfigService) => {
-  return () => configService.loadConfig();
-};
 
 @NgModule({
   declarations: [  
@@ -69,8 +64,7 @@ export const configFactory = (configService: ConfigService) => {
   providers: [
     MatDatepickerModule,
     {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
-    {provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: {useUtc: true}},
-    {provide: APP_INITIALIZER, useFactory: configFactory, deps: [ConfigService], multi: true}
+    {provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: {useUtc: true}}    
   ]  
 })
 export class ReadingsModule { }

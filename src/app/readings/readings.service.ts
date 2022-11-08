@@ -4,7 +4,7 @@ import * as moment from 'moment';
 
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Config, ConfigService } from '../config.service';
+import { environment } from 'src/environments/environment';
 import { Reading } from './readings.model';
 
 export interface GetParameters {
@@ -17,12 +17,9 @@ export interface GetParameters {
 @Injectable({ providedIn: 'root' })
 export class ReadingsService {
 
-  private config: Config | undefined;
   private baseRoute: string = "reading";
 
-  constructor(private http: HttpClient, private configService: ConfigService) {
-    this.config = configService.config;
-  }
+  constructor(private http: HttpClient) {}
 
   public getReadings(parameters: GetParameters): Observable<Array<Reading>> {
 
@@ -66,7 +63,7 @@ export class ReadingsService {
   }
 
   private getUrl(): string {
-    return `${this.config?.apiUrl}/${this.baseRoute}`;
+    return `${environment.apiUrl}/${this.baseRoute}`;
   }
 
   public sortByReadingDesc(a: Reading, b: Reading): number {
