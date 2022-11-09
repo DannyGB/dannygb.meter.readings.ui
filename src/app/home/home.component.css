@@ -1,0 +1,11 @@
+.right {
+    float:right;
+}
+
+mat-icon {
+    padding-right: 10px;
+}
+
+mat-card-content > button {
+    padding: 3px;
+}

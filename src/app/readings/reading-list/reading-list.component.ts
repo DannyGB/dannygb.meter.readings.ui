@@ -67,7 +67,7 @@ export class ReadingListComponent implements OnInit {
       const dayReading: Reading = {
         _id: UUID.UUID(),
         reading: Number(result.dayReading.reading),
-        readingdate: result.dayReading.readingdate,
+        readingdate: result.dayReading.readingdate.startOf('day'),
         note: result.dayReading.note,
         rate: "Day"
       };
@@ -75,7 +75,7 @@ export class ReadingListComponent implements OnInit {
       const nightReading: Reading = {
         _id: UUID.UUID(),
         reading: Number(result.nightReading.reading),
-        readingdate: result.dayReading.readingdate,
+        readingdate: result.dayReading.readingdate.startOf('day'),
         note: result.dayReading.note,
         rate: "Night"
       };
