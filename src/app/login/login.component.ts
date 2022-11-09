@@ -1,7 +1,11 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MsalService, MsalBroadcastService, MSAL_GUARD_CONFIG, MsalGuardConfiguration } from '@azure/msal-angular';
-import { InteractionStatus, RedirectRequest, EventMessage, EventType } from '@azure/msal-browser';
+import { InteractionStatus, RedirectRequest, EventMessage, EventType, AccountInfo } from '@azure/msal-browser';
+import { Store } from '@ngrx/store';
 import { filter, Subject, takeUntil } from 'rxjs';
+import { setUser } from '../state/app.actions';
+import { selectUser } from '../state/app.selectors';
+import { User } from '../state/user.model';
 
 @Component({
   selector: 'app-login',
@@ -10,14 +14,15 @@ import { filter, Subject, takeUntil } from 'rxjs';
 })
 export class LoginComponent implements OnInit, OnDestroy {
 
+  public user: User | undefined;
   public loginDisplay = false
-  public name: string | undefined;
   private readonly _destroying$ = new Subject<void>();
 
   constructor(
     @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
     private authService: MsalService,
-    private msalBroadcastService: MsalBroadcastService) { }
+    private msalBroadcastService: MsalBroadcastService,
+    private store: Store) { }
 
   ngOnDestroy(): void {
     this._destroying$.next(undefined);
@@ -48,6 +53,9 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.setLoginDisplay();
         this.checkAndSetActiveAccount();
       })
+
+      this.store.select(selectUser)
+      .subscribe(user => this.user = user);
   }
 
   public loginRedirect() {
@@ -69,17 +77,22 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (!activeAccount && this.authService.instance.getAllAccounts().length > 0) {
       let accounts = this.authService.instance.getAllAccounts();
       this.authService.instance.setActiveAccount(accounts[0]);
-      this.name = accounts[0].name;
+      this.setUser(accounts[0]);
 
       return;
 
     }
 
-    this.name = activeAccount?.name;
-
+    this.setUser(activeAccount);
   }
 
   public logout(popup?: boolean) {
     this.authService.logoutRedirect();
+  }
+
+  private setUser(accountInfo: AccountInfo | null): void {
+    const name = accountInfo?.name ?? "";
+    const userName = accountInfo?.username ?? "";
+    this.store.dispatch(setUser({ user: { name, userName } as User }));
   }
 }

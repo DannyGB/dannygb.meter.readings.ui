@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as moment from 'moment';
-import { Reading } from '../readings.model';
-import { selectReadings } from '../state/readings.selectors';
+import { Reading } from '../../state/reading.model';
+import { selectReadings } from '../../state/app.selectors';
 
 @Component({
   selector: 'app-reading-chart',

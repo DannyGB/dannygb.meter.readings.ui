@@ -1,11 +1,7 @@
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { ReadingsComponent } from './readings.component';
-import { StoreModule } from '@ngrx/store';
 import { ReadingsRoutingModule } from './readings-routing.module';
-
-import { readingsReducer } from './state/readings.reducer';
 import { HttpClientModule } from '@angular/common/http';
 import { ReadingListComponent } from './reading-list/reading-list.component';
 import { MatTableModule } from '@angular/material/table';
@@ -42,7 +38,6 @@ import { ReadingLineChartComponent } from './reading-chart/reading-line-chart/re
   ],
   imports: [
     BrowserModule,
-    StoreModule.forRoot({ readings: readingsReducer }),
     HttpClientModule,
     ReadingsRoutingModule,
     MatTableModule,

@@ -1,7 +1,7 @@
 import { Component, Inject } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { Reading } from "../readings.model";
+import { Reading } from "../../state/reading.model";
 
 @Component({
     selector: 'new-reading-dialog',
@@ -26,5 +26,6 @@ import { Reading } from "../readings.model";
     dayReading: Reading,
     nightReading: Reading,
     lastDayReading: number,
-    lastNightReading: number
+    lastNightReading: number,
+    userName: string
   }

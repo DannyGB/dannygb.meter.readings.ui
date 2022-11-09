@@ -17,7 +17,7 @@
     text-align: center;
   }
 
-  .mat-column-readingdate {
+  .mat-column-readingdate, .mat-column-userName {
     width: 90px;
     border-left: 1px solid currentColor;
     border-right: 1px solid currentColor;

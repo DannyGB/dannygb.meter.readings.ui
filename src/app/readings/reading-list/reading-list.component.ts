@@ -1,48 +1,55 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ReadingsService } from '../readings.service';
-import { addReading, removeReading } from '../state/readings.actions';
+import { addReading, removeReading } from '../../state/app.actions';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { Reading } from '../readings.model';
+import { Reading } from '../../state/reading.model';
 import { MatDialog } from '@angular/material/dialog';
 import { NewReadingData, NewReadingDialog } from '../new-reading/new-reading.component';
 import { UUID } from 'angular2-uuid';
 import { DeleteReadingComponent } from '../delete-reading/delete-reading.component';
 import { ReadingDataSource } from '../reading.datasource';
-import { filter, zipWith } from 'rxjs';
+import { Subject, takeUntil, zipWith } from 'rxjs';
 import * as moment from 'moment';
-import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
-import { AuthenticationResult, EventMessage, EventType, InteractionStatus } from '@azure/msal-browser';
+import { selectUser } from 'src/app/state/app.selectors';
+import { User } from 'src/app/state/user.model';
 
 @Component({
   selector: 'app-reading-list',
   templateUrl: './reading-list.component.html',
   styleUrls: ['./reading-list.component.css']
 })
-export class ReadingListComponent implements OnInit {
+export class ReadingListComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatPaginator, { static: true })
   paginator!: MatPaginator;
 
   private initialPageSize = 50;
   public pageSize = this.initialPageSize;
-  public columnsToDisplay = ['rate', 'reading', 'readingdate', 'note', 'delete'];
+  public columnsToDisplay = ['rate', 'reading', 'readingdate', 'userName', 'note', 'delete'];
   public pageSizeOptions = [5, 10, 20, 50];
   public dataSource!: ReadingDataSource;
   public chartVisible = true;
-
+  public user?: User;
+  private destroy$: Subject<void> = new Subject<void>();
   
   constructor(
     private readingsService: ReadingsService,
     private store: Store,
-    private dialog: MatDialog,
-    private authService: MsalService,
-    private msalBroadcastService: MsalBroadcastService
+    private dialog: MatDialog
   ) {}
 
   public ngOnInit(): void {
     this.dataSource = new ReadingDataSource(this.readingsService, this.store);
     this.dataSource.loadData();
+    this.store.select(selectUser)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(user => this.user = user)
+    ;
+  }
+
+  public ngOnDestroy(): void {
+    this.destroy$.next();
   }
 
   public addNewReading(): void {
@@ -56,6 +63,7 @@ export class ReadingListComponent implements OnInit {
         nightReading: {},
         lastDayReading: this.readingsService.getLastDayReading(this.dataSource.data),
         lastNightReading: this.readingsService.getLastNightReading(this.dataSource.data),
+        userName: this.user?.userName
       }
     });
 
@@ -69,7 +77,8 @@ export class ReadingListComponent implements OnInit {
         reading: Number(result.dayReading.reading),
         readingdate: result.dayReading.readingdate.startOf('day'),
         note: result.dayReading.note,
-        rate: "Day"
+        rate: "Day",
+        userName: result.userName
       };
 
       const nightReading: Reading = {
@@ -77,7 +86,8 @@ export class ReadingListComponent implements OnInit {
         reading: Number(result.nightReading.reading),
         readingdate: result.dayReading.readingdate.startOf('day'),
         note: result.dayReading.note,
-        rate: "Night"
+        rate: "Night",
+        userName: result.userName
       };
 
       if(dayReading.reading > 0 && nightReading.reading > 0) { // TODO: Validation
@@ -107,7 +117,7 @@ export class ReadingListComponent implements OnInit {
   }
 
   public onSortChange(event: any): void {
-    this.dataSource.sortEvent$.next({ direction: event.direction});
+    this.dataSource.sortEvent$.next({ direction: event.direction });
   }
 
   public onChangePage(pe: PageEvent): void {

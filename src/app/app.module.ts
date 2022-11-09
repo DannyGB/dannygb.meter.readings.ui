@@ -15,6 +15,8 @@ import { IPublicClientApplication, PublicClientApplication, InteractionType, Bro
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
 import { MatCardModule } from '@angular/material/card';
+import { StoreModule } from '@ngrx/store';
+import { readingsReducer, userReducer } from './state/app.reducer';
 
 export function loggerCallback(logLevel: LogLevel, message: string) {
   console.log(message);
@@ -79,7 +81,8 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
     MatMenuModule,    
     MsalModule,
     MatCardModule,
-    HomeModule
+    HomeModule,
+    StoreModule.forRoot({ user: userReducer, readings: readingsReducer }),
   ],
   providers: [
     {

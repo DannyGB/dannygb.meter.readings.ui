@@ -3,10 +3,10 @@ import { MatTableDataSource } from "@angular/material/table";
 import { Store } from "@ngrx/store";
 import * as moment from "moment";
 import { BehaviorSubject, combineLatestWith, Subject, zip, zipWith } from "rxjs";
-import { Reading } from "./readings.model";
+import { Reading } from "../state/reading.model";
 import { ReadingsService } from "./readings.service";
-import { retrievedReadingList } from "./state/readings.actions";
-import { selectReadings } from "./state/readings.selectors";
+import { retrievedReadingList } from "../state/app.actions";
+import { selectReadings } from "../state/app.selectors";
 
 export interface SortEvent {
     direction: string,

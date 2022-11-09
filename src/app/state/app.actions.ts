@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
-import { Reading } from '../readings.model';
+import { Reading } from './reading.model';
+import { User } from './user.model';
  
 export const addReading = createAction(
   '[Reading List] Add Reading',
@@ -12,6 +13,11 @@ export const removeReading = createAction(
 );
  
 export const retrievedReadingList = createAction(
-  '[Reading List/API] Retrieve Readings Success',
+  'Retrieve Readings Success',
   props<{ readings: Array<Reading> }>()
+);
+
+export const setUser = createAction(
+  'Set the username',
+  props<{ user: User }>()
 );

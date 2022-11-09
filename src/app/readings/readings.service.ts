@@ -5,7 +5,7 @@ import * as moment from 'moment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { Reading } from './readings.model';
+import { Reading } from '../state/reading.model';
 
 export interface GetParameters {
   skip: number;
