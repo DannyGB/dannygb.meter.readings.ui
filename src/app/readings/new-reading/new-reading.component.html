@@ -5,13 +5,13 @@
 
     <mat-form-field appearance="fill">
       <mat-label>Day Reading</mat-label>    
-      <input matInput name="reading" [required]="true" [(ngModel)]="data.dayReading.reading">
+      <input inputmode="numeric" matInput name="reading" [required]="true" [(ngModel)]="data.dayReading.reading">
       <mat-hint align="end">Last reading was: {{data.lastDayReading}}</mat-hint>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Night Reading</mat-label>    
-      <input matInput name="reading" [required]="true" [(ngModel)]="data.nightReading.reading">
+      <input inputmode="numeric" matInput name="reading" [required]="true" [(ngModel)]="data.nightReading.reading">
       <mat-hint align="end">Last reading was: {{data.lastNightReading}}</mat-hint>
     </mat-form-field>
 
