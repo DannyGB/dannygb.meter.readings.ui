@@ -17,3 +17,8 @@ app-readings-number-panel {
   min-height: 100px;
   padding-top: 75px;
 }
+
+.layout {
+  display: flex;
+  flex-wrap: wrap;
+}

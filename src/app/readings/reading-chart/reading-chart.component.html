@@ -1,44 +1,46 @@
-<mat-card class="number-panel" *ngIf="isVisible('number-panel')">
-    <mat-card-header>
-        <mat-card-title>
-            Average day usage
-        </mat-card-title>    
-    </mat-card-header>
-    <mat-card-content>
-        <app-readings-number-panel 
-            [number]="averageDailyUsageDay">
-        </app-readings-number-panel>
-    </mat-card-content>
-</mat-card>
+<div class="layout">
+    <mat-card class="number-panel" *ngIf="isVisible('number-panel')">
+        <mat-card-header>
+            <mat-card-title>
+                Average day usage
+            </mat-card-title>    
+        </mat-card-header>
+        <mat-card-content>
+            <app-readings-number-panel 
+                [number]="averageDailyUsageDay">
+            </app-readings-number-panel>
+        </mat-card-content>
+    </mat-card>
 
-<mat-card class="number-panel" *ngIf="isVisible('number-panel')">
-    <mat-card-header>
-        <mat-card-title>
-            Average day usage
-        </mat-card-title>    
-    </mat-card-header>
-    <mat-card-content>
-        <app-readings-number-panel 
-            [number]="averageDailyUsageNight">
-        </app-readings-number-panel>
-    </mat-card-content>
-</mat-card>
-        
-<mat-card class="line" *ngIf="isVisible('line')">
-    <mat-card-header>
-        <mat-card-title>Per day units</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-        <app-reading-line-chart [data]="data" [options]="options"></app-reading-line-chart>            
-    </mat-card-content>
-</mat-card>
+    <mat-card class="number-panel" *ngIf="isVisible('number-panel')">
+        <mat-card-header>
+            <mat-card-title>
+                Average night usage
+            </mat-card-title>    
+        </mat-card-header>
+        <mat-card-content>
+            <app-readings-number-panel 
+                [number]="averageDailyUsageNight">
+            </app-readings-number-panel>
+        </mat-card-content>
+    </mat-card>
 
-<mat-card class="pie" *ngIf="isVisible('pie')">
-    <mat-card-header>
-        <mat-card-title>Day/Night breakdown</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-        <app-reading-pie-chart [data]="donutData" [options]="donutOptions"></app-reading-pie-chart>                        
-    </mat-card-content>
-</mat-card>
-
+    <mat-card class="pie" *ngIf="isVisible('pie')">
+        <mat-card-header>
+            <mat-card-title>Day/Night breakdown</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <app-reading-pie-chart [data]="donutData" [options]="donutOptions"></app-reading-pie-chart>                        
+        </mat-card-content>
+    </mat-card>
+            
+    <mat-card class="line" *ngIf="isVisible('line')">
+        <mat-card-header>
+            <mat-card-title>Per day units</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <app-reading-line-chart [data]="data" [options]="options"></app-reading-line-chart>            
+        </mat-card-content>
+    </mat-card>
+    
+</div>

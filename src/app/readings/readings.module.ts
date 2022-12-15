@@ -28,6 +28,7 @@ import { ReadingLineChartComponent } from './reading-chart/reading-line-chart/re
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'; 
 import {MatTabsModule} from '@angular/material/tabs';
 import { ReadingsNumberPanelComponent } from './reading-chart/readings-number-panel/readings-number-panel.component';
+import { MatGridListModule } from '@angular/material/grid-list'; 
 
 @NgModule({
   declarations: [  
@@ -60,7 +61,8 @@ import { ReadingsNumberPanelComponent } from './reading-chart/readings-number-pa
     MatCardModule,
     MatSlideToggleModule,
     ChartModule,
-    MatTabsModule
+    MatTabsModule,
+    MatGridListModule
   ],
   providers: [
     MatDatepickerModule,
