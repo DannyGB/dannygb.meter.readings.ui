@@ -18,70 +18,86 @@
     </button>
 </mat-toolbar>
 
-<mat-card *ngIf="chartVisible">  
-  <app-reading-chart></app-reading-chart>
-</mat-card>
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
 
-<mat-card>
-  <mat-form-field appearance="fill" color="primary" id="filter-form-field">
-    <mat-label>Filter</mat-label>
-    <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-  </mat-form-field>
+  <mat-tab label="Charts">
+    <mat-card>  
+      <app-reading-chart></app-reading-chart>
+    </mat-card>
+  </mat-tab>  
 
-  <table mat-table [dataSource]="dataSource" 
-    matSort 
-    (matSortChange)="onSortChange($event)"
-    matSortActive="readingdate"
-    matSortDirection="desc"
-    class="mat-elevation-z8 reading-table">
-    
-      <ng-container matColumnDef="rate">
-        <th mat-header-cell *matHeaderCellDef> Rate </th>
-        <td mat-cell *matCellDef="let reading"> {{reading.rate}} </td>
-      </ng-container>
+  <mat-tab label="Data">
 
-      <ng-container matColumnDef="reading">
-        <th mat-header-cell *matHeaderCellDef> Reading </th>
-        <td mat-cell *matCellDef="let reading"> {{reading.reading}} </td>        
-      </ng-container>
-      <ng-container matColumnDef="readingdate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
-        <td mat-cell *matCellDef="let reading"> {{reading.readingdate | date : 'mediumDate' : 'UTC'}} </td>
-      </ng-container>
+    <mat-card *ngIf="chartVisible">  
+      <app-reading-chart [charts]="['line']"></app-reading-chart>
+    </mat-card>
 
-      <ng-container matColumnDef="userName">
-        <th mat-header-cell *matHeaderCellDef> Username </th>
-        <td mat-cell *matCellDef="let reading"> {{reading.userName}} </td>
-      </ng-container>
+    <mat-card>
+      <mat-form-field appearance="fill" color="primary" id="filter-form-field">
+        <mat-label>Filter</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>    
+      </mat-form-field>
+      
+    <p>
+      <mat-slide-toggle [(ngModel)]="forecastApplied" (change)="toggleForecast()">Forecast</mat-slide-toggle>
+    </p>
 
-      <ng-container matColumnDef="note">
-        <th mat-header-cell *matHeaderCellDef> Note </th>
-        <td mat-cell *matCellDef="let reading"> {{reading.note}} </td>
-      </ng-container>
+      <table mat-table [dataSource]="dataSource" 
+        matSort 
+        (matSortChange)="onSortChange($event)"
+        matSortActive="readingdate"
+        matSortDirection="desc"
+        class="mat-elevation-z8 reading-table">
+        
+          <ng-container matColumnDef="rate">
+            <th mat-header-cell *matHeaderCellDef> Rate </th>
+            <td mat-cell *matCellDef="let reading"> {{reading.rate}} </td>
+          </ng-container>
 
-      <ng-container matColumnDef="delete">
-        <th mat-header-cell *matHeaderCellDef> Delete </th>
-        <td mat-cell *matCellDef="let reading">
-          <button mat-icon-button
-            (click)="deleteReading(reading._id)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-      <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-      <tr mat-row *matRowDef="let reading; columns: columnsToDisplay"></tr>
+          <ng-container matColumnDef="reading">
+            <th mat-header-cell *matHeaderCellDef> Reading </th>
+            <td mat-cell *matCellDef="let reading"> {{reading.reading}} </td>        
+          </ng-container>
+          <ng-container matColumnDef="readingdate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+            <td mat-cell *matCellDef="let reading"> {{reading.readingdate | date : 'mediumDate' : 'UTC'}} </td>
+          </ng-container>
 
-      <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
-      </tr>
+          <ng-container matColumnDef="userName">
+            <th mat-header-cell *matHeaderCellDef> Username </th>
+            <td mat-cell *matCellDef="let reading"> {{reading.userName}} </td>
+          </ng-container>
 
-  </table>
+          <ng-container matColumnDef="note">
+            <th mat-header-cell *matHeaderCellDef> Note </th>
+            <td mat-cell *matCellDef="let reading"> {{reading.note}} </td>
+          </ng-container>
 
-  <mat-paginator [pageSizeOptions]="pageSizeOptions"
-    showFirstLastButtons 
-    [length]="dataSource.totalReadings$ | async"
-    [pageSize]="pageSize"
-    (page)="onChangePage($event)"
-    aria-label="Select page of readings">
-  </mat-paginator>
-</mat-card>
+          <ng-container matColumnDef="delete">
+            <th mat-header-cell *matHeaderCellDef> Delete </th>
+            <td mat-cell *matCellDef="let reading">
+              <button mat-icon-button
+                (click)="deleteReading(reading._id)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+          <tr mat-row *matRowDef="let reading; columns: columnsToDisplay"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+          </tr>
+
+      </table>
+
+      <mat-paginator [pageSizeOptions]="pageSizeOptions"
+        showFirstLastButtons 
+        [length]="dataSource.totalReadings$ | async"
+        [pageSize]="pageSize"
+        (page)="onChangePage($event)"
+        aria-label="Select page of readings">
+      </mat-paginator>
+    </mat-card>
+  </mat-tab>  
+</mat-tab-group>

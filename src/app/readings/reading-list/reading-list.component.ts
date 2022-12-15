@@ -9,7 +9,7 @@ import { NewReadingData, NewReadingDialog } from '../new-reading/new-reading.com
 import { UUID } from 'angular2-uuid';
 import { DeleteReadingComponent } from '../delete-reading/delete-reading.component';
 import { ReadingDataSource } from '../reading.datasource';
-import { Subject, takeUntil, zipWith } from 'rxjs';
+import { BehaviorSubject, Subject, takeUntil, zipWith } from 'rxjs';
 import * as moment from 'moment';
 import { selectUser } from 'src/app/state/app.selectors';
 import { User } from 'src/app/state/user.model';
@@ -32,6 +32,7 @@ export class ReadingListComponent implements OnInit, OnDestroy {
   public chartVisible = true;
   public user?: User;
   private destroy$: Subject<void> = new Subject<void>();
+  public forecastApplied: boolean = false;
   
   constructor(
     private readingsService: ReadingsService,
@@ -132,4 +133,74 @@ export class ReadingListComponent implements OnInit, OnDestroy {
   public toggleChart(): void {
     this.chartVisible = !this.chartVisible;
   }  
+
+  public toggleForecast(): void {
+
+    if(!this.dataSource.data || !this.dataSource.data.length) {
+      return;
+    }
+
+    const data = [...this.dataSource.data];
+
+    if(this.forecastApplied) {
+
+      // find last years usage for next month (or nearest) and add that to the list
+
+      const nightData = [...data].filter(reading => {
+        return reading.rate === "Night";
+      }).sort((a,b) => {
+        return a < b ? 1 : -1;
+      });
+      const dayData = [...data].filter(reading => {
+        return reading.rate === "Day";
+      }).sort((a,b) => {
+        return a < b ? 1 : -1;
+      });
+
+      const lastRealNightReading = nightData[0];
+      const lastRealDayReading = dayData[0];
+
+      let lastMonthNight = nightData.findIndex(reading => {
+        const d = moment(moment().add(-1, "y")).add(1, "M");
+        return reading.readingdate.month() === d.month() && reading.readingdate.year() === d.year();
+      });
+
+      let lastMonthDay = dayData.findIndex(reading => {
+        const d = moment(moment().add(-1, "y")).add(1, "M");
+        return reading.readingdate.month() === d.month() && reading.readingdate.year() === d.year();
+      });
+
+      if(!lastMonthNight || !lastMonthDay 
+          || lastMonthNight > (nightData.length-1)
+          || lastMonthDay > (dayData.length-1)) {
+        return;
+      }
+
+      const dayDiff = dayData[lastMonthDay].readingdate.diff(dayData[lastMonthDay+1].readingdate, "days");
+
+      this.store.dispatch(addReading({ reading: {
+        _id: UUID.UUID(),
+        reading: lastRealDayReading.reading + (dayData[lastMonthDay].reading - dayData[lastMonthDay+1].reading),
+        readingdate: moment(lastRealDayReading.readingdate).add(dayDiff, "days"),
+        note: "forecast",
+        rate: "Day",
+        userName: this.user?.userName || ""
+      } }));
+      this.store.dispatch(addReading({ reading: {
+        _id: UUID.UUID(),
+        reading: lastRealNightReading.reading + (nightData[lastMonthNight].reading - nightData[lastMonthNight+1].reading),
+        readingdate: moment(lastRealNightReading.readingdate).add(dayDiff, "days"),
+        note: "forecast",
+        rate: "Night",
+        userName: this.user?.userName || ""
+      } }));    
+    } else {
+      const ids = data.filter(reading => {
+        return reading.note === "forecast";
+      }).flatMap(reading => reading._id)
+      .forEach(id => {
+        this.store.dispatch(removeReading({readingId: id}))
+      });
+    }  
+  }
 }

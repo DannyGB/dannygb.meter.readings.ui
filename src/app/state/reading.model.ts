@@ -1,7 +1,7 @@
 export interface Reading {
     _id: string;
     reading: number;
-    readingdate: any;
+    readingdate: moment.Moment;
     note: string;
     rate: string;
     userName: string;

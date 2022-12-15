@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 import { Reading } from '../../state/reading.model';
@@ -11,13 +11,19 @@ import { selectReadings } from '../../state/app.selectors';
 })
 export class ReadingChartComponent implements OnInit {
   
+  @Input() public charts: Array<string> = ["line", "pie", "number-panel"];
+
   private dayColour = '#FFA726';
   private nightColour = '#FF1626';
   private day = "day";
   private night = "night"
 
+  public averageDailyUsageDay: number = 0;
+  public averageDailyUsageNight: number = 0;
   public data: any;
   public options: any = {
+    responsive: true,
+    maintainAspectRatio: true,
     plugins: {
         legend: {
             labels: {
@@ -71,6 +77,7 @@ export class ReadingChartComponent implements OnInit {
 
         this.generateLineChartData(days, nights);
         this.generatePieChartData(days, nights);
+        this.generateAverageDailyUsage(days, nights);
         
       });
   }
@@ -128,6 +135,20 @@ export class ReadingChartComponent implements OnInit {
     }
   }
 
+  private generateAverageDailyUsage(dayReadings: Reading[], nightReadings: Reading[]): void {
+    this.averageDailyUsageDay = Math.ceil((dayReadings && dayReadings.length) 
+      ? dayReadings
+        .flatMap(reading => reading.reading)
+        .reduce((prev, curr) => prev + curr) / dayReadings.length 
+      : 0);
+
+    this.averageDailyUsageNight = Math.ceil((nightReadings && nightReadings.length)
+      ? nightReadings
+        .flatMap(reading => reading.reading)
+        .reduce((prev, curr) => prev + curr) / nightReadings.length
+      : 0);
+  }
+
   private calculatePerDayUnits(reading: Reading, idx: number, arr: Reading[]): Reading {
     const days = idx > 0 ? (reading.readingdate as moment.Moment).diff(arr[idx-1].readingdate, 'd') : 1;
           return { 
@@ -140,5 +161,9 @@ export class ReadingChartComponent implements OnInit {
 
   private sortByReading(a: Reading, b: Reading): number {
     return a.reading > b.reading ? 1 : -1;
+  }
+
+  public isVisible(chartName: string): boolean {
+    return this.charts.filter(name => name === chartName).length > 0;
   }
 }

@@ -25,6 +25,9 @@ import { ChartModule } from 'primeng/chart';
 import { ReadingChartComponent } from './reading-chart/reading-chart.component';
 import { ReadingPieChartComponent } from './reading-chart/reading-pie-chart/reading-pie-chart.component';
 import { ReadingLineChartComponent } from './reading-chart/reading-line-chart/reading-line-chart.component'; 
+import { MatSlideToggleModule } from '@angular/material/slide-toggle'; 
+import {MatTabsModule} from '@angular/material/tabs';
+import { ReadingsNumberPanelComponent } from './reading-chart/readings-number-panel/readings-number-panel.component';
 
 @NgModule({
   declarations: [  
@@ -34,7 +37,8 @@ import { ReadingLineChartComponent } from './reading-chart/reading-line-chart/re
     DeleteReadingComponent,
     ReadingChartComponent,
     ReadingPieChartComponent,
-    ReadingLineChartComponent
+    ReadingLineChartComponent,
+    ReadingsNumberPanelComponent
   ],
   imports: [
     BrowserModule,
@@ -54,7 +58,9 @@ import { ReadingLineChartComponent } from './reading-chart/reading-line-chart/re
     MatSortModule,
     MatRadioModule,
     MatCardModule,
-    ChartModule
+    MatSlideToggleModule,
+    ChartModule,
+    MatTabsModule
   ],
   providers: [
     MatDatepickerModule,

@@ -65,9 +65,9 @@ export class ReadingDataSource extends MatTableDataSource<Reading> {
                 }, '')
                 .toLowerCase();
 
-                const transformedFilter = filter.trim().toLowerCase();
+        const transformedFilter = filter.trim().toLowerCase();
 
-                return dataStr.indexOf(transformedFilter) != -1;
+        return dataStr.indexOf(transformedFilter) != -1;
     }
 
     private getReadings(): void {

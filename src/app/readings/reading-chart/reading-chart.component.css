@@ -1,11 +1,19 @@
-.parent {
-    display: flex;
-    flex-flow: wrap;
-    justify-content: space-around;
-  }
+.pie, .number-panel {
+  max-width: 40vw;
+}
 
-  @media (max-width: 768px) {
-    .parent {
-        display: none;
-    }
-  }
+.number-panel > p {
+  font-size: 10em;
+}
+
+mat-card {
+  margin: 25px;  
+}
+
+app-readings-number-panel {
+  justify-content: center;
+  display: flex;
+  font-size: 10em;
+  min-height: 100px;
+  padding-top: 75px;
+}
