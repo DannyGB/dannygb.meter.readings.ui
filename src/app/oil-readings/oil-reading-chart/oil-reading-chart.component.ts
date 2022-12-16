@@ -1,8 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as moment from 'moment';
-import { Reading } from '../../state/reading.model';
-import { selectOilReadings, selectReadings } from '../../state/app.selectors';
+import { selectOilReadings } from '../../state/app.selectors';
 import { OilReading } from 'src/app/state/oil-reading.model';
 
 @Component({
@@ -16,7 +15,9 @@ export class OilReadingChartComponent implements OnInit {
 
   private colour = '#FFA726';
 
-  public averageDailyUsageDay: number = 0;
+  public maxCost: string = "0";
+  public minCost: string = "0";
+  public avgCost: string = "0";
   public averageDailyUsageNight: number = 0;
   public data: any;
   public options: any = {
@@ -71,10 +72,41 @@ export class OilReadingChartComponent implements OnInit {
         }
 
         this.generateLineChartData(readings);
-        //this.generatePieChartData(days, nights);
-        //this.generateAverageDailyUsage(days, nights);
+        this.generateCostData(readings);
         
       });
+  }
+
+  private generateCostData(readings: OilReading[]): void {
+
+    if(!readings || !readings.length) {
+      return;
+    }
+
+    const costs = readings.flatMap(r => {
+      return {
+        cost: r.cost,
+        volume: r.volume
+      }
+    });
+
+    this.maxCost = readings
+      .flatMap(r => r.cost / r.volume)
+      .reduce((p, c) => p > c ? p : c).toFixed(2);
+
+    this.minCost = readings
+      .flatMap(r => r.cost / r.volume)
+      .reduce((p, c) => p > c ? c : p).toFixed(2);
+    
+    const accumulated = costs
+      .reduce((p, c) => {
+        return { 
+          cost: p.cost + c.cost,
+          volume: p.volume + c.volume
+        }
+    });
+    
+    this.avgCost = (accumulated.cost / accumulated.volume).toFixed(2);
   }
 
   private generateLineChartData(readings: OilReading[]): void {
@@ -93,56 +125,6 @@ export class OilReadingChartComponent implements OnInit {
     return readings
       .flatMap(reading => (reading.date as moment.Moment).format("DD MMMM YYYY"))
   }
-
-  // private generatePieChartData(days: Reading[], nights: Reading[]): void {
-  //   this.donutData = {
-  //     labels: ['Day', 'Night'],
-  //     datasets: [
-  //       {
-  //         data: [
-  //           days.length ? days.flatMap(reading => reading.reading).reduce((a, b) => a + b) : [],
-  //           nights.length ? nights.flatMap(reading => reading.reading).reduce((a, b) => a + b) : []
-  //         ],
-  //         backgroundColor: [
-  //             this.dayColour,
-  //             this.nightColour
-  //         ],
-  //         hoverBackgroundColor: [
-  //           this.dayColour,
-  //           this.nightColour
-  //         ]
-  //     }
-  //     ]
-  //   }
-  // }
-
-  // private generateAverageDailyUsage(dayReadings: Reading[], nightReadings: Reading[]): void {
-  //   this.averageDailyUsageDay = Math.ceil((dayReadings && dayReadings.length) 
-  //     ? dayReadings
-  //       .flatMap(reading => reading.reading)
-  //       .reduce((prev, curr) => prev + curr) / dayReadings.length 
-  //     : 0);
-
-  //   this.averageDailyUsageNight = Math.ceil((nightReadings && nightReadings.length)
-  //     ? nightReadings
-  //       .flatMap(reading => reading.reading)
-  //       .reduce((prev, curr) => prev + curr) / nightReadings.length
-  //     : 0);
-  // }
-
-  // private calculatePerDayUnits(reading: Reading, idx: number, arr: Reading[]): Reading {
-  //   const days = idx > 0 ? (reading.readingdate as moment.Moment).diff(arr[idx-1].readingdate, 'd') : 1;
-  //         return { 
-  //           reading: idx > 0 ? Math.ceil((reading.reading - arr[idx-1].reading) / days) : 0,
-  //           rate: reading.rate,
-  //           note: reading.note,
-  //           readingdate: reading.readingdate
-  //         } as Reading;
-  // }
-
-  // private sortByReading(a: Reading, b: Reading): number {
-  //   return a.reading > b.reading ? 1 : -1;
-  // }
 
   public isVisible(chartName: string): boolean {
     return this.charts.filter(name => name === chartName).length > 0;

@@ -10,7 +10,7 @@ mat-card {
   margin: 25px;  
 }
 
-app-readings-number-panel {
+app-number-panel {
   justify-content: center;
   display: flex;
   font-size: 10em;

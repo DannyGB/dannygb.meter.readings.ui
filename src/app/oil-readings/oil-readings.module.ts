@@ -27,6 +27,7 @@ import { NewOilReadingDialog } from './new-oil-reading/new-oil-reading.component
 import { DeleteOilReadingComponent } from './delete-oil-reading/delete-oil-reading.component';
 import { OilReadingChartComponent } from './oil-reading-chart/oil-reading-chart.component';
 import { OilReadingLineChartComponent } from './oil-reading-chart/oil-reading-line-chart/oil-reading-line-chart.component'
+import { SharedUiComponentsModule } from '../shared/components/shared-ui-components/shared-ui-components.module';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { OilReadingLineChartComponent } from './oil-reading-chart/oil-reading-li
     MatSlideToggleModule,
     ChartModule,
     MatTabsModule,
-    MatGridListModule
+    MatGridListModule,
+    SharedUiComponentsModule,
   ],
   providers: [
     MatDatepickerModule,
