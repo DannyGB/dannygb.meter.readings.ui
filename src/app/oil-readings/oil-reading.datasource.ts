@@ -1,26 +1,29 @@
 import { Store } from "@ngrx/store";
 import { combineLatestWith, zipWith } from "rxjs";
-import { Reading } from "../state/reading.model";
-import { ReadingsService } from "./readings.service";
-import { retrievedReadingList } from "../state/app.actions";
-import { selectReadings } from "../state/app.selectors";
+import { OilReadingsService } from "./oil-readings.service";
+import { retrievedOilReadingList } from "../state/app.actions";
+import { selectOilReadings } from "../state/app.selectors";
+import { OilReading } from '../state/oil-reading.model';
 import { BaseMatTableDataSource } from "../shared/MatTableDataSource/base-mattable-datasource";
 
-export class ReadingDataSource extends BaseMatTableDataSource<Reading> {
+export class OilReadingDataSource extends BaseMatTableDataSource<OilReading> {
 
     constructor(
-        private readingsService: ReadingsService,
+        private readingsService: OilReadingsService,
         private store: Store) {
         super();
     }
 
     public override loadData() {
         this.getReadings();
-        this.store.select(selectReadings)
-            .subscribe((data: Reading[]) => this.data = data);
+        this.store.select(selectOilReadings)
+            .subscribe({
+                next: (data: OilReading[]) => this.data = data,
+                error: err => console.error(`Error: ${err}`)
+            });
 
         super.loadData();
-    }    
+    }
 
     private getReadings(): void {
         this.pageEvent$.pipe(combineLatestWith(this.sortEvent$, this.filterEvent$))
@@ -34,12 +37,12 @@ export class ReadingDataSource extends BaseMatTableDataSource<Reading> {
             .subscribe({
                 next: val => {
                     this.totalReadings$.next(val[1]);
-                    this.store.dispatch(retrievedReadingList({ readings: val[0] }))
+                    this.store.dispatch(retrievedOilReadingList({ oilReadings: val[0] }))
                     this.loadComplete$.next();
                 },
                 error: err => { 
                     this.totalReadings$.next(0);
-                    this.store.dispatch(retrievedReadingList({ readings: [] }))
+                    this.store.dispatch(retrievedOilReadingList({ oilReadings: [] }))
                     this.loadComplete$.next();
                 }
             });

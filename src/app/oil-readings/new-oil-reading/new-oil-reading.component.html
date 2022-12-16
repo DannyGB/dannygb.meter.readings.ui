@@ -1,0 +1,34 @@
+<form #readingForm="ngForm">
+    <div mat-dialog-content>
+      
+      <p>Please enter oil data:</p>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Volume</mat-label>    
+        <input inputmode="numeric" matInput name="volume" [required]="true" [(ngModel)]="data.volume">        
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Cost</mat-label>    
+        <input inputmode="numeric" matInput name="cost" [required]="true" [(ngModel)]="data.cost">
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Date</mat-label>    
+        <input matInput name="date" [required]="true"  [matDatepicker]="picker" [(ngModel)]="data.date">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      
+      <mat-form-field appearance="fill">
+        <mat-label>Note</mat-label>    
+        <textarea matInput name="note" [(ngModel)]="data.note"></textarea>
+      </mat-form-field>
+    </div>
+  
+    <div mat-dialog-actions>
+      <button type="submit" mat-button [mat-dialog-close]="data" cdkFocusInitial [disabled]="!readingForm.form.valid">Ok</button>
+      <button mat-button (click)="onNoClick()">Cancel</button>    
+    </div>
+  
+  </form>

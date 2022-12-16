@@ -1,28 +1,49 @@
-<mat-grid-list cols="1" rowHeight="2:1">
-    <mat-grid-tile>
-        <mat-card>
-            <mat-card-title>                
-                Readings                
-                <mat-icon class="right">electric_meter</mat-icon>                                            
-            </mat-card-title>
-            <mat-card-content> 
-                <button mat-button routerLink="/readings">
-                    <img src="/images/meter.png">
-                </button>                              
-            </mat-card-content>
-            <mat-divider></mat-divider>
-            <mat-card-footer>
-                <mat-card>
-                    <button mat-button matTooltip="Total day units used this year">
-                        <mat-icon>light_mode</mat-icon>
-                        <span>{{ totals?.Day }}</span>
-                    </button>
-                    <button mat-button matTooltip="Total night units used this year">
-                        <mat-icon>dark_mode</mat-icon>{{ totals?.Night }}
-                    </button>
-                </mat-card>                
-            </mat-card-footer>
-        </mat-card>
-    </mat-grid-tile>
-  </mat-grid-list>
+<div class="layout">
+
+    <mat-card>
+        <mat-card-title>                
+            Electric Readings                
+            <mat-icon class="right">electric_meter</mat-icon>                                            
+        </mat-card-title>
+        <mat-card-content> 
+            <button mat-button routerLink="/readings">
+                <img src="/images/meter.png">
+            </button>                              
+        </mat-card-content>
+        <mat-divider></mat-divider>
+        <mat-card-footer>
+            <mat-card>
+                <button mat-button matTooltip="Total day units used this year">
+                    <mat-icon>light_mode</mat-icon>
+                    <span>{{ totals?.Day }}</span>
+                </button>
+                <button mat-button matTooltip="Total night units used this year">
+                    <mat-icon>dark_mode</mat-icon>{{ totals?.Night }}
+                </button>
+            </mat-card>                
+        </mat-card-footer>
+    </mat-card>
+    
+    <mat-card>
+        <mat-card-title>                
+            Oil Readings                
+            <mat-icon class="right">gas_meter</mat-icon>                                            
+        </mat-card-title>
+        <mat-card-content> 
+            <button mat-button routerLink="/oil">
+                <img src="/images/meter.png">
+            </button>                              
+        </mat-card-content>
+        <mat-divider></mat-divider>
+        <mat-card-footer>
+            <mat-card>
+                <button mat-button matTooltip="Total Oil used so far (£'s)">
+                    <mat-icon>light_mode</mat-icon>
+                    <span></span>
+                </button>
+            </mat-card>                
+        </mat-card-footer>
+    </mat-card>
+
+</div>
   

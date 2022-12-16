@@ -4,6 +4,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ReadingsModule } from './readings/readings.module';
 import { HomeModule } from './home/home.module';
+import { OilReadingsModule } from './oil-readings/oil-readings.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -16,7 +17,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
 import { MatCardModule } from '@angular/material/card';
 import { StoreModule } from '@ngrx/store';
-import { readingsReducer, userReducer } from './state/app.reducer';
+import { oilReadingsReducer, readingsReducer, userReducer } from './state/app.reducer';
 
 export function loggerCallback(logLevel: LogLevel, message: string) {
   console.log(message);
@@ -82,7 +83,8 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
     MsalModule,
     MatCardModule,
     HomeModule,
-    StoreModule.forRoot({ user: userReducer, readings: readingsReducer }),
+    OilReadingsModule,
+    StoreModule.forRoot({ user: userReducer, readings: readingsReducer, oilReadings: oilReadingsReducer }),
   ],
   providers: [
     {

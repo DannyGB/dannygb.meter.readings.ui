@@ -1,0 +1,50 @@
+.reading-table {
+  width: 100%;
+}
+
+.mat-column-volume, .mat-column-cost {
+  width: 32px;
+  border-right: 1px solid currentColor;
+  padding: 0 15px;
+  text-align: center;
+}
+
+.mat-column-delete {
+  width: 32px;
+  border-left: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+  padding: 0 15px;
+  text-align: center;
+}
+
+.mat-column-date, .mat-column-userName {
+  width: 90px;
+  border-left: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+  padding: 0 15px;
+  text-align: center;
+}
+
+.mat-column-note {
+  padding: 0 15px;
+}
+
+.mat-column-date {
+  padding-left: 15px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+#filter-form-field {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+
+  .mat-column-note, .mat-column-userName {
+    display: none;
+  }
+
+}

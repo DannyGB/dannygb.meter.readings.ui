@@ -1,8 +1,7 @@
-export interface Reading {
-    _id: string;
+import { BaseReading } from './base-reading.model';
+
+export interface Reading extends BaseReading  {
     reading: number;
     readingdate: moment.Moment;
-    note: string;
     rate: string;
-    userName: string;
 }

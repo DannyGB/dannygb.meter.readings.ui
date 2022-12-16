@@ -42,9 +42,6 @@
   }
 
   @media (max-width: 768px) {
-    /* #toggle-chart {
-      display: none;
-    } */
 
     .mat-column-note, .mat-column-userName {
       display: none;

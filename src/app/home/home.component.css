@@ -1,5 +1,5 @@
-.right {
-    float:right;
+mat-card {
+    margin: 25px;
 }
 
 mat-icon {
@@ -8,4 +8,9 @@ mat-icon {
 
 mat-card-content > button {
     padding: 3px;
+}
+
+.layout {
+    display: flex;
+    flex-wrap: wrap;
 }
