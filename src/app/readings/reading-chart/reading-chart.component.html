@@ -1,4 +1,5 @@
 <div class="layout">
+    
     <mat-card class="number-panel" *ngIf="isVisible('number-panel')">
         <mat-card-header>
             <mat-card-title>
@@ -6,9 +7,9 @@
             </mat-card-title>    
         </mat-card-header>
         <mat-card-content>
-            <app-readings-number-panel 
+            <app-number-panel 
                 [number]="averageDailyUsageDay">
-            </app-readings-number-panel>
+            </app-number-panel>
         </mat-card-content>
     </mat-card>
 
@@ -19,9 +20,9 @@
             </mat-card-title>    
         </mat-card-header>
         <mat-card-content>
-            <app-readings-number-panel 
+            <app-number-panel
                 [number]="averageDailyUsageNight">
-            </app-readings-number-panel>
+            </app-number-panel>
         </mat-card-content>
     </mat-card>
 

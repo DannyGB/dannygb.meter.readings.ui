@@ -7,7 +7,7 @@ import { Component, Input } from '@angular/core';
 })
 export class NumberPanelComponent {
 
-  @Input() public number: string = "0";
+  @Input() public number: string | number = "0";
 
   constructor() { }
 }

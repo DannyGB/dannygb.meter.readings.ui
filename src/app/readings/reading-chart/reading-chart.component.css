@@ -2,20 +2,13 @@
   max-width: 40vw;
 }
 
-.number-panel > p {
-  font-size: 10em;
-}
-
 mat-card {
   margin: 25px;  
 }
 
-app-readings-number-panel {
+app-number-panel {
   justify-content: center;
-  display: flex;
-  font-size: 10em;
-  min-height: 100px;
-  padding-top: 75px;
+  display: flex;  
 }
 
 .layout {

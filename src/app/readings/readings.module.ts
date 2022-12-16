@@ -27,8 +27,8 @@ import { ReadingPieChartComponent } from './reading-chart/reading-pie-chart/read
 import { ReadingLineChartComponent } from './reading-chart/reading-line-chart/reading-line-chart.component'; 
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'; 
 import {MatTabsModule} from '@angular/material/tabs';
-import { ReadingsNumberPanelComponent } from './reading-chart/readings-number-panel/readings-number-panel.component';
 import { MatGridListModule } from '@angular/material/grid-list'; 
+import { SharedUiComponentsModule } from '../shared/components/shared-ui-components/shared-ui-components.module';
 
 @NgModule({
   declarations: [  
@@ -38,8 +38,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
     DeleteReadingComponent,
     ReadingChartComponent,
     ReadingPieChartComponent,
-    ReadingLineChartComponent,
-    ReadingsNumberPanelComponent
+    ReadingLineChartComponent,    
   ],
   imports: [
     BrowserModule,
@@ -62,7 +61,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatSlideToggleModule,
     ChartModule,
     MatTabsModule,
-    MatGridListModule
+    MatGridListModule,
+    SharedUiComponentsModule
   ],
   providers: [
     MatDatepickerModule,

@@ -1,4 +1,5 @@
 <div class="layout">
+    
     <mat-card class="number-panel" *ngIf="isVisible('number-panel')">
         <mat-card-header>
             <mat-card-title>
@@ -37,15 +38,6 @@
             </app-number-panel>
         </mat-card-content>
     </mat-card>
-
-    <!-- <mat-card class="pie" *ngIf="isVisible('pie')">
-        <mat-card-header>
-            <mat-card-title>Day/Night breakdown</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <app-reading-pie-chart [data]="donutData" [options]="donutOptions"></app-reading-pie-chart>                        
-        </mat-card-content>
-    </mat-card> -->
             
     <mat-card class="line" *ngIf="isVisible('line')">
         <mat-card-header>
