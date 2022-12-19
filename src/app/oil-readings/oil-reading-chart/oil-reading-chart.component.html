@@ -38,6 +38,19 @@
             </app-number-panel>
         </mat-card-content>
     </mat-card>
+
+    <mat-card class="number-panel" *ngIf="isVisible('number-panel')">
+        <mat-card-header>
+            <mat-card-title>
+                Avg Per Day Usage
+            </mat-card-title>    
+        </mat-card-header>
+        <mat-card-content>
+            <app-number-panel 
+                [number]="avgDayUsage">
+            </app-number-panel>
+        </mat-card-content>
+    </mat-card>
             
     <mat-card class="line" *ngIf="isVisible('line')">
         <mat-card-header>

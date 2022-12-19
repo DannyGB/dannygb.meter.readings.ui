@@ -18,7 +18,7 @@ export class OilReadingChartComponent implements OnInit {
   public maxCost: string = "0";
   public minCost: string = "0";
   public avgCost: string = "0";
-  public averageDailyUsageNight: number = 0;
+  public avgDayUsage: string = "0";
   public data: any;
   public options: any = {
     responsive: true,
@@ -71,10 +71,38 @@ export class OilReadingChartComponent implements OnInit {
           return;
         }
 
-        this.generateLineChartData(readings);
-        this.generateCostData(readings);
+        const localReadingsData = [...readings]
+          .sort((a, b) => a.date < b.date ? -1: 1);
+
+        this.generateLineChartData(localReadingsData);
+        this.generateCostData(localReadingsData);
+        this.generateAveragePerDayData(localReadingsData);
         
       });
+  }
+
+  private generateAveragePerDayData(readings: OilReading[]): void {
+    const totalCost = readings
+      .flatMap(r => r.cost)
+      .reduce((p, c) => p + c);
+
+
+    const maxDate = readings
+      .flatMap(r => r.date)
+      .reduce((p, c) => p < c ? c : p);
+
+    const minDate = readings
+    .flatMap(r => r.date)
+    .reduce((p, c) => p > c ? c : p);
+
+    const dateDiff = maxDate.diff(minDate, "days");
+
+    if(totalCost <= 0 || dateDiff <= 0) {
+      return;
+    }
+
+    this.avgDayUsage = (totalCost / dateDiff).toFixed(2);
+
   }
 
   private generateCostData(readings: OilReading[]): void {
@@ -110,6 +138,7 @@ export class OilReadingChartComponent implements OnInit {
   }
 
   private generateLineChartData(readings: OilReading[]): void {
+
     this.data = {
       labels:  this.generateLabels(readings),
       datasets: [
