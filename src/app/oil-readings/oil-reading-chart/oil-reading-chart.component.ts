@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 import { selectOilReadings } from '../../state/app.selectors';
 import { OilReading } from 'src/app/state/oil-reading.model';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-oil-reading-chart',
@@ -18,7 +19,8 @@ export class OilReadingChartComponent implements OnInit {
   public maxCost: string = "0";
   public minCost: string = "0";
   public avgCost: string = "0";
-  public avgDayUsage: string = "0";
+  public avgDayUsage$: BehaviorSubject<string> = new BehaviorSubject<string>("0");
+  public avgDayCost: string = "0";
   public data: any;
   public options: any = {
     responsive: true,
@@ -101,7 +103,7 @@ export class OilReadingChartComponent implements OnInit {
       return;
     }
 
-    this.avgDayUsage = (totalCost / dateDiff).toFixed(2);
+    this.avgDayUsage$.next((totalCost / dateDiff).toFixed(2));
 
   }
 
@@ -135,6 +137,10 @@ export class OilReadingChartComponent implements OnInit {
     });
     
     this.avgCost = (accumulated.cost / accumulated.volume).toFixed(2);
+
+    this.avgDayUsage$.subscribe(usage => {
+      this.avgDayCost = (+this.avgCost * +usage).toFixed(2);
+    });
   }
 
   private generateLineChartData(readings: OilReading[]): void {
