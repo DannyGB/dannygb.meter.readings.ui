@@ -3,12 +3,12 @@
     <mat-card class="number-panel" *ngIf="isVisible('number-panel')">
         <mat-card-header>
             <mat-card-title>
-                Max PPL
+                Max PPL (£)
             </mat-card-title>    
         </mat-card-header>
         <mat-card-content>
             <app-number-panel
-                [number]="maxCost">
+                [number]="maxCost$ | async">
             </app-number-panel>
         </mat-card-content>
     </mat-card>
@@ -16,12 +16,12 @@
     <mat-card class="number-panel" *ngIf="isVisible('number-panel')">
         <mat-card-header>
             <mat-card-title>
-                Min PPL
+                Min PPL (£)
             </mat-card-title>    
         </mat-card-header>
         <mat-card-content>
             <app-number-panel 
-                [number]="minCost">
+                [number]="minCost$ | async">
             </app-number-panel>
         </mat-card-content>
     </mat-card>
@@ -29,12 +29,12 @@
     <mat-card class="number-panel" *ngIf="isVisible('number-panel')">
         <mat-card-header>
             <mat-card-title>
-                Avg PPL
+                Avg PPL (£)
             </mat-card-title>    
         </mat-card-header>
         <mat-card-content>
             <app-number-panel 
-                [number]="avgCost">
+                [number]="avgCost$ | async">
             </app-number-panel>
         </mat-card-content>
     </mat-card>
@@ -42,7 +42,7 @@
     <mat-card class="number-panel" *ngIf="isVisible('number-panel')">
         <mat-card-header>
             <mat-card-title>
-                Avg Per Day Usage
+                Avg Per Day Usage (L)
             </mat-card-title>    
         </mat-card-header>
         <mat-card-content>
@@ -55,12 +55,25 @@
     <mat-card class="number-panel" *ngIf="isVisible('number-panel')">
         <mat-card-header>
             <mat-card-title>
-                Avg Per Day Cost
+                Avg Per Day Cost (£)
             </mat-card-title>    
         </mat-card-header>
         <mat-card-content>
             <app-number-panel 
-                [number]="avgDayCost">
+                [number]="avgDayCost$ | async">
+            </app-number-panel>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="number-panel" *ngIf="isVisible('number-panel')">
+        <mat-card-header>
+            <mat-card-title>
+                Avg Per 30 day Cost (£)
+            </mat-card-title>    
+        </mat-card-header>
+        <mat-card-content>
+            <app-number-panel 
+                [number]="avg30DayCost$ | async">
             </app-number-panel>
         </mat-card-content>
     </mat-card>

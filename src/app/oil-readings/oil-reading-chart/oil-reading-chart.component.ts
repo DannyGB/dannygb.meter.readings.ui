@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 import { selectOilReadings } from '../../state/app.selectors';
 import { OilReading } from 'src/app/state/oil-reading.model';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatestWith, mergeWith, zip, zipWith } from 'rxjs';
 
 @Component({
   selector: 'app-oil-reading-chart',
@@ -16,11 +16,12 @@ export class OilReadingChartComponent implements OnInit {
 
   private colour = '#FFA726';
 
-  public maxCost: string = "0";
-  public minCost: string = "0";
-  public avgCost: string = "0";
+  public maxCost$: BehaviorSubject<string> = new BehaviorSubject<string>("0");
+  public minCost$: BehaviorSubject<string> = new BehaviorSubject<string>("0");
+  public avgCost$: BehaviorSubject<string> = new BehaviorSubject<string>("0");
   public avgDayUsage$: BehaviorSubject<string> = new BehaviorSubject<string>("0");
-  public avgDayCost: string = "0";
+  public avg30DayCost$: BehaviorSubject<string> = new BehaviorSubject<string>("0");
+  public avgDayCost$: BehaviorSubject<string> = new BehaviorSubject<string>("0");
   public data: any;
   public options: any = {
     responsive: true,
@@ -120,13 +121,13 @@ export class OilReadingChartComponent implements OnInit {
       }
     });
 
-    this.maxCost = readings
+    this.maxCost$.next(readings
       .flatMap(r => r.cost / r.volume)
-      .reduce((p, c) => p > c ? p : c).toFixed(2);
+      .reduce((p, c) => p > c ? p : c).toFixed(2));
 
-    this.minCost = readings
+    this.minCost$.next(readings
       .flatMap(r => r.cost / r.volume)
-      .reduce((p, c) => p > c ? c : p).toFixed(2);
+      .reduce((p, c) => p > c ? c : p).toFixed(2));
     
     const accumulated = costs
       .reduce((p, c) => {
@@ -136,11 +137,15 @@ export class OilReadingChartComponent implements OnInit {
         }
     });
     
-    this.avgCost = (accumulated.cost / accumulated.volume).toFixed(2);
+    this.avgCost$.next((accumulated.cost / accumulated.volume).toFixed(2));
 
-    this.avgDayUsage$.subscribe(usage => {
-      this.avgDayCost = (+this.avgCost * +usage).toFixed(2);
-    });
+    this.avgDayUsage$
+      .pipe(combineLatestWith(this.avgCost$))
+      .subscribe(zip => {
+        const avgDayCost = (+zip[1] * +zip[0]).toFixed(2);
+        this.avgDayCost$.next(avgDayCost);
+        this.avg30DayCost$.next((+avgDayCost * 30).toFixed(2));
+      });
   }
 
   private generateLineChartData(readings: OilReading[]): void {
