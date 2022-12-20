@@ -8,7 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 @Component({
   selector: 'app-reading-chart',
   templateUrl: './reading-chart.component.html',
-  styleUrls: ['./reading-chart.component3.css']
+  styleUrls: ['./reading-chart.component.css']
 
 })
 export class ReadingChartComponent implements OnInit {
