@@ -33,7 +33,8 @@ export class ReadingListComponent implements OnInit, OnDestroy {
   public user?: User;
   private destroy$: Subject<void> = new Subject<void>();
   public forecastApplied: boolean = false;
-  
+  public loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+
   constructor(
     private readingsService: ReadingsService,
     private store: Store,
@@ -47,6 +48,10 @@ export class ReadingListComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(user => this.user = user)
     ;
+
+    this.dataSource.loadComplete$.subscribe(() => {
+      this.loading$.next(false);
+    });
   }
 
   public ngOnDestroy(): void {

@@ -1,1 +1,2 @@
-<p-chart type="line" [data]="data" [options]="options" width="80vw" height="40vh"></p-chart>
+<p-chart *ngIf="!loading" type="line" [data]="data" [options]="options" width="80vw" height="40vh"></p-chart>
+<app-loading-ripple [loading]="loading$"></app-loading-ripple>

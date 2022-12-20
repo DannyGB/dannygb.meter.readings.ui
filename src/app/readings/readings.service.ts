@@ -22,12 +22,11 @@ export class ReadingsService {
   constructor(private http: HttpClient) {}
 
   public getReadings(parameters: GetParameters): Observable<Array<Reading>> {
-
+    
     return this.http
-      .get<Reading[]>(
-        `${this.getUrl()}/?skip=${parameters.skip}&take=${parameters.take}&sort=${parameters.sortDirection}&filter=${parameters.filterText}`
-      )
+      .get<Reading[]>(`${this.getUrl()}/?skip=${parameters.skip}&take=${parameters.take}&sort=${parameters.sortDirection}&filter=${parameters.filterText}`)
       .pipe(map((readings) => {
+        
         if (!readings) {
           return [];
         }
@@ -41,25 +40,18 @@ export class ReadingsService {
 
   public getReadingCount(filterText: string): Observable<number> {
     return this.http
-      .get<number>(
-        `${this.getUrl()}/count?filter=${filterText}`
-      )
+      .get<number>(`${this.getUrl()}/count?filter=${filterText}`)
       .pipe(map((count) => count || 0));
   }
 
   public addReading(reading: Reading): Observable<object> {
     return this.http
-      .post(
-        `${this.getUrl()}/${reading._id}`, reading
-      )
+      .post(`${this.getUrl()}/${reading._id}`, reading)
       .pipe(map((location) => location || ""));
   }
 
   public deleteReading(id: string): Observable<object> {
-    return this.http
-      .delete(
-        `${this.getUrl()}/${id}`
-        );
+    return this.http.delete(`${this.getUrl()}/${id}`);
   }
 
   private getUrl(): string {

@@ -3,16 +3,20 @@ import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 import { Reading } from '../../state/reading.model';
 import { selectReadings } from '../../state/app.selectors';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-reading-chart',
   templateUrl: './reading-chart.component.html',
-  styleUrls: ['./reading-chart.component.css']
+  styleUrls: ['./reading-chart.component3.css']
+
 })
 export class ReadingChartComponent implements OnInit {
   
   @Input() public charts: Array<string> = ["line", "pie", "number-panel"];
+  @Input("loading") public loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
+  public loading: boolean = true;
   private dayColour = '#FFA726';
   private nightColour = '#FF1626';
   private day = "day";
@@ -80,6 +84,8 @@ export class ReadingChartComponent implements OnInit {
         this.generateAverageDailyUsage(days, nights);
         
       });
+
+      this.loading$.subscribe(val => this.loading = val);
   }
 
   private separateData(readings: Reading[], rate: string): Reading[] {

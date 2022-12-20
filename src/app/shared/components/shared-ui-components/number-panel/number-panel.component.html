@@ -1,1 +1,6 @@
-<div>{{number}}</div>
+<div *ngIf="!loading">{{number}}</div>
+<div>
+    <app-loading-ripple 
+        [loading]="loading$">
+    </app-loading-ripple>
+</div>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { OilReadingDataSource } from '../oil-reading.datasource';
 import { User } from 'src/app/state/user.model';
 import { OilReadingsService } from '../oil-readings.service';
@@ -30,6 +30,7 @@ export class OilReadingsListComponent implements OnInit {
   public user?: User;
   private destroy$: Subject<void> = new Subject<void>();
   public forecastApplied: boolean = false;
+  public loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   
   constructor(
     private readingsService: OilReadingsService,
@@ -43,6 +44,10 @@ export class OilReadingsListComponent implements OnInit {
         .pipe(takeUntil(this.destroy$))
         .subscribe(user => this.user = user)
       ;
+
+      this.dataSource.loadComplete$.subscribe(() => {
+        this.loading$.next(false);
+      });
     }
   
     public ngOnDestroy(): void {

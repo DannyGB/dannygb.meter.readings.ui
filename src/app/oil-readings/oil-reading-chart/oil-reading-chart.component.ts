@@ -13,9 +13,10 @@ import { BehaviorSubject, combineLatestWith, mergeWith, zip, zipWith } from 'rxj
 export class OilReadingChartComponent implements OnInit {
   
   @Input() public charts: Array<string> = ["line", "pie", "number-panel"];
-
+  @Input("loading") public loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+  
   private colour = '#FFA726';
-
+  public loading: boolean = true;
   public maxCost$: BehaviorSubject<string> = new BehaviorSubject<string>("0");
   public minCost$: BehaviorSubject<string> = new BehaviorSubject<string>("0");
   public avgCost$: BehaviorSubject<string> = new BehaviorSubject<string>("0");
@@ -82,6 +83,8 @@ export class OilReadingChartComponent implements OnInit {
         this.generateAveragePerDayData(localReadingsData);
         
       });
+
+      this.loading$.subscribe(val => this.loading = val);
   }
 
   private generateAveragePerDayData(readings: OilReading[]): void {

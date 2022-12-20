@@ -5,3 +5,10 @@
 .spacer {
   flex: 1 1 auto;
 }
+
+.lds-ripple {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}

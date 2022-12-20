@@ -1,0 +1,5 @@
+.lds-wrapper {
+    justify-content: center;
+    display: flex;  
+    position: relative;    
+  }

@@ -8,6 +8,7 @@
         </mat-card-header>
         <mat-card-content>
             <app-number-panel
+                [loading]="loading$"
                 [number]="maxCost$ | async">
             </app-number-panel>
         </mat-card-content>
@@ -21,6 +22,7 @@
         </mat-card-header>
         <mat-card-content>
             <app-number-panel 
+                [loading]="loading$"
                 [number]="minCost$ | async">
             </app-number-panel>
         </mat-card-content>
@@ -33,7 +35,8 @@
             </mat-card-title>    
         </mat-card-header>
         <mat-card-content>
-            <app-number-panel 
+            <app-number-panel
+                [loading]="loading$"
                 [number]="avgCost$ | async">
             </app-number-panel>
         </mat-card-content>
@@ -47,6 +50,7 @@
         </mat-card-header>
         <mat-card-content>
             <app-number-panel 
+                [loading]="loading$"
                 [number]="avgDayUsage$ | async">
             </app-number-panel>
         </mat-card-content>
@@ -59,7 +63,8 @@
             </mat-card-title>    
         </mat-card-header>
         <mat-card-content>
-            <app-number-panel 
+            <app-number-panel
+                [loading]="loading$"
                 [number]="avgDayCost$ | async">
             </app-number-panel>
         </mat-card-content>
@@ -73,6 +78,7 @@
         </mat-card-header>
         <mat-card-content>
             <app-number-panel 
+                [loading]="loading$"
                 [number]="avg30DayCost$ | async">
             </app-number-panel>
         </mat-card-content>
@@ -83,7 +89,11 @@
             <mat-card-title>Per day units</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <app-oil-reading-line-chart [data]="data" [options]="options"></app-oil-reading-line-chart>            
+            <app-oil-reading-line-chart
+                [loading]="loading$"    
+                [data]="data"
+                [options]="options">
+            </app-oil-reading-line-chart>            
         </mat-card-content>
     </mat-card>
     

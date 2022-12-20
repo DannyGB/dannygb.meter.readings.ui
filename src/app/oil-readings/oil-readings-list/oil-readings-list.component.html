@@ -22,14 +22,14 @@
 
   <mat-tab label="Charts">
     <mat-card>  
-      <app-oil-reading-chart></app-oil-reading-chart>
+      <app-oil-reading-chart [loading]="loading$"></app-oil-reading-chart>
     </mat-card>
   </mat-tab>  
 
   <mat-tab label="Data">
 
     <mat-card *ngIf="chartVisible">  
-      <app-oil-reading-chart [charts]="['line']"></app-oil-reading-chart>
+      <app-oil-reading-chart [loading]="loading$" [charts]="['line']"></app-oil-reading-chart>
     </mat-card>
 
     <mat-card>
