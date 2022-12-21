@@ -10,28 +10,29 @@ import { addReading, removeReading } from '../../state/app.actions';
 })
 export class ReadingListService {
 
+  public destroy$: Subject<void> = new Subject<void>();
+
   constructor(
     private readingsService: ReadingsService,
     private store: Store,
   ) { }
 
-  public deleteReading(id: string): Observable<object> {
-    return this.readingsService.deleteReading(id)
+  public deleteReading(id: string): void {
+    this.readingsService
+      .deleteReading(id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(_ => this.store.dispatch(removeReading({readingId: id})));
   }
 
-  public dispatchRemoveReading(id: string){
-    this.store.dispatch(removeReading({readingId: id}))
-  }
-
-  public addReading(dayReading: Reading, nightReading: Reading): Observable<any[]> {
-    return this.readingsService
-      .addReading(dayReading)
-      .pipe(zipWith(this.readingsService.addReading(nightReading)));
-  }
-
-  public dispatchAddReading(dayReading: Reading, nightReading: Reading): void {
-    this.store.dispatch(addReading({ reading: dayReading }));
-    this.store.dispatch(addReading({ reading: nightReading }));
+  public addReading(dayReading: Reading, nightReading: Reading) {
+    this.readingsService
+      .addReading(dayReading)      
+      .pipe(zipWith(this.readingsService.addReading(nightReading)))
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(_ => {
+        this.store.dispatch(addReading({ reading: dayReading }));
+        this.store.dispatch(addReading({ reading: nightReading }));
+      })
   }
 
   public getLastDayReading(readings: Reading[]): number {

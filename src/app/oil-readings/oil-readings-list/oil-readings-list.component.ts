@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { OilReadingDataSource } from '../oil-reading.datasource';
 import { OilReadingsService } from '../oil-readings.service';
-import { selectUser } from 'src/app/state/app.selectors';
+import { UserService } from '../../login/user.service';
 import * as moment from 'moment';
 import { OilReading } from '../models/oil-reading.model';
 import { UUID } from 'angular2-uuid';
@@ -12,6 +12,8 @@ import { addOilReading, removeOilReading } from 'src/app/state/app.actions';
 import { PageEvent } from '@angular/material/paginator';
 import { NewOilReadingData, NewOilReadingDialog } from '../new-oil-reading/new-oil-reading.component';
 import { DeleteOilReadingComponent } from '../delete-oil-reading/delete-oil-reading.component';
+import { User } from 'src/app/login/models/user.model';
+import { OilReadingsListService } from './oil-readings-list.service';
 
 @Component({
   selector: 'app-oil-readings-list',
@@ -26,7 +28,7 @@ export class OilReadingsListComponent implements OnInit, OnDestroy {
   public pageSizeOptions = [5, 10, 20, 50];
   public dataSource!: OilReadingDataSource;
   public chartVisible = true;
-  public user?: { name: string, userName: string };
+  public user?: User;
   private destroy$: Subject<void> = new Subject<void>();
   public forecastApplied: boolean = false;
   public loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
@@ -34,15 +36,16 @@ export class OilReadingsListComponent implements OnInit, OnDestroy {
   constructor(
     private readingsService: OilReadingsService,
     private store: Store,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private userService: UserService,
+    private oilReadingsListService: OilReadingsListService) { }
 
     public ngOnInit(): void {
       this.dataSource = new OilReadingDataSource(this.readingsService, this.store);
       this.dataSource.loadData();
-      this.store.select(selectUser)
+      this.userService.getUser()
         .pipe(takeUntil(this.destroy$))
-        .subscribe(user => this.user = { name: user.name ?? "", userName: user.userName ?? "" })
-      ;
+        .subscribe((user: User) => this.user = { name: user.name ?? "", userName: user.userName ?? "" });
 
       this.dataSource.loadComplete$
         .pipe(takeUntil(this.destroy$))
@@ -51,6 +54,7 @@ export class OilReadingsListComponent implements OnInit, OnDestroy {
   
     public ngOnDestroy(): void {
       this.destroy$.next();
+      this.oilReadingsListService.destroy$.next();
     }
   
     public addNewReading(): void {
@@ -81,11 +85,7 @@ export class OilReadingsListComponent implements OnInit, OnDestroy {
         };
   
         if(reading.volume > 0 ) { // TODO: Validation
-          this.readingsService.addReading(reading)
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((location: any) => {
-              this.store.dispatch(addOilReading({ reading }));
-          });
+          this.oilReadingsListService.addReading(reading);
         }
       });
     }
@@ -100,9 +100,7 @@ export class OilReadingsListComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe(result => {
         if(result) {
-          this.readingsService.deleteReading(id).subscribe((location: any) => {
-            this.store.dispatch(removeOilReading({readingId: id}))
-          });
+          this.oilReadingsListService.deleteReading(id)
         }
       });
     }

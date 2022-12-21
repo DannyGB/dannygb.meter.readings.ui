@@ -1,6 +1,6 @@
 import { Store } from "@ngrx/store";
 import { combineLatestWith, zipWith } from "rxjs";
-import { Reading } from "../state/reading.model";
+import { Reading } from "./models/reading.model";
 import { ReadingsService } from "./readings.service";
 import { retrievedReadingList } from "../state/app.actions";
 import { selectReadings } from "../state/app.selectors";

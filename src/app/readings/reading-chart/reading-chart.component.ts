@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as moment from 'moment';
-import { Reading } from '../../state/reading.model';
+import { Reading } from '../models/reading.model';
 import { selectReadings } from '../../state/app.selectors';
 import { BehaviorSubject } from 'rxjs';
 

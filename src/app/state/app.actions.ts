@@ -1,7 +1,7 @@
 import { createAction, props } from '@ngrx/store';
-import { Reading } from './reading.model';
-import { OilReading } from './oil-reading.model';
-import { User } from './user.model';
+import { Reading } from '../readings/models/reading.model';
+import { OilReading } from '../oil-readings/models/oil-reading.model';
+import { User } from '../login/models/user.model';
  
 export const addReading = createAction(
   '[Reading List] Add Reading',

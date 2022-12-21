@@ -1,7 +1,7 @@
 import { Component, Inject } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { Reading } from "../../state/reading.model";
+import { Reading } from "../models/reading.model";
 
 @Component({
     selector: 'new-reading-dialog',

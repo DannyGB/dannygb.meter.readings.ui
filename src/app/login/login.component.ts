@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { filter, Subject, takeUntil } from 'rxjs';
 import { setUser } from '../state/app.actions';
 import { selectUser } from '../state/app.selectors';
-import { User } from '../state/user.model';
+import { User } from './models/user.model';
 
 @Component({
   selector: 'app-login',

@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 import { ReadingsComponent } from './readings.component';
 import { ReadingsRoutingModule } from './readings-routing.module';
 import { HttpClientModule } from '@angular/common/http';
@@ -26,9 +25,10 @@ import { ReadingChartComponent } from './reading-chart/reading-chart.component';
 import { ReadingPieChartComponent } from './reading-chart/reading-pie-chart/reading-pie-chart.component';
 import { ReadingLineChartComponent } from './reading-chart/reading-line-chart/reading-line-chart.component'; 
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'; 
-import {MatTabsModule} from '@angular/material/tabs';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatGridListModule } from '@angular/material/grid-list'; 
 import { SharedUiComponentsModule } from '../shared/components/shared-ui-components/shared-ui-components.module';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [  
@@ -41,7 +41,7 @@ import { SharedUiComponentsModule } from '../shared/components/shared-ui-compone
     ReadingLineChartComponent,    
   ],
   imports: [
-    BrowserModule,
+    CommonModule,
     HttpClientModule,
     ReadingsRoutingModule,
     MatTableModule,
@@ -67,7 +67,7 @@ import { SharedUiComponentsModule } from '../shared/components/shared-ui-compone
   providers: [
     MatDatepickerModule,
     {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
-    {provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: {useUtc: true}}    
+    {provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: {useUtc: true}}
   ]  
 })
 export class ReadingsModule { }

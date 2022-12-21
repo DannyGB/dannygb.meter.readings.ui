@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
-
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { Reading } from '../state/reading.model';
+import { Reading } from './models/reading.model';
+import { Totals } from './models/totals.model';
 
 export interface GetParameters {
   skip: number;
@@ -21,6 +21,21 @@ export class ReadingsService {
 
   constructor(private http: HttpClient) {}
 
+  public getTotals(year: number): Observable<Totals> {
+
+    return this.http
+      .get<Totals>(
+        `${this.getUrl()}/${year}/total`
+      )
+      .pipe(map((totals) => {
+        if (!totals) {
+          return { Day: 0, Night: 0 } as Totals;
+        }
+
+        return totals;
+      }));
+  }
+  
   public getReadings(parameters: GetParameters): Observable<Array<Reading>> {
     
     return this.http
@@ -56,36 +71,5 @@ export class ReadingsService {
 
   private getUrl(): string {
     return `${environment.apiUrl}/${this.baseRoute}`;
-  }
-
-  public sortByReadingDesc(a: Reading, b: Reading): number {
-    return this.sortByReading(a, b, "desc");
-  }
-
-  public sortByReadingAsc(a: Reading, b: Reading): number {
-    return this.sortByReading(a, b, "asc");
-  }
-
-  public sortByReading(a: Reading, b: Reading, direction: string): number {
-    return direction === "asc"
-      ? a.reading > b.reading ? 1 : -1
-      : a.reading < b.reading ? 1 : -1
-  } 
-
-  public separateDataByRate(readings: Reading[], rate: string): Reading[] {
-    return [...readings]
-      .filter(e => e.rate.toLocaleLowerCase() == rate)      
-  }
-
-  public getLastDayReading(readings: Reading[]): number {
-    return readings.length 
-      ? this.separateDataByRate(readings, "day")
-          .sort(this.sortByReadingDesc.bind(this))[0].reading : 0;
-  }
-
-  public getLastNightReading(readings: Reading[]): number {
-    return readings.length 
-      ? this.separateDataByRate(readings, "night")
-          .sort(this.sortByReadingDesc.bind(this))[0].reading : 0;
-  }
+  }  
 }

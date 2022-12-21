@@ -1,8 +1,8 @@
 import { createReducer, on } from '@ngrx/store';
 import { addOilReading, addReading, removeOilReading, removeReading, retrievedOilReadingList, retrievedReadingList, setUser } from './app.actions';
-import { OilReading } from './oil-reading.model';
-import { Reading } from './reading.model';
-import { User } from './user.model';
+import { OilReading } from '../oil-readings/models/oil-reading.model';
+import { Reading } from '../readings/models/reading.model';
+import { User } from '../login/models/user.model';
 
 export const initialState: Array<Reading> = [];
 

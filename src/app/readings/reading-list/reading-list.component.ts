@@ -62,6 +62,7 @@ export class ReadingListComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     this.destroy$.next();
+    this.readingListService.destroy$.next();
   }
 
   public addNewReading(): void {
@@ -104,9 +105,7 @@ export class ReadingListComponent implements OnInit, OnDestroy {
       };
 
       if(dayReading.reading > 0 && nightReading.reading > 0) { // TODO: Validation
-        this.readingListService.addReading(dayReading, nightReading)
-          .pipe(takeUntil(this.destroy$))
-          .subscribe(_ => this.readingListService.dispatchAddReading(dayReading, nightReading));
+        this.readingListService.addReading(dayReading, nightReading);          
       }
     });
   }
@@ -119,11 +118,7 @@ export class ReadingListComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result) {
-        this.readingListService.deleteReading(id)
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((location: any) => {
-            this.readingListService.dispatchRemoveReading(id)
-        });
+        this.readingListService.deleteReading(id);        
       }
     });
   }

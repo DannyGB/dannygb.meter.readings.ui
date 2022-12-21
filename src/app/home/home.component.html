@@ -37,9 +37,9 @@
         <mat-divider></mat-divider>
         <mat-card-footer>
             <mat-card>
-                <button mat-button matTooltip="Total Oil used so far (£'s)">
+                <button mat-button matTooltip="Avg 30 day cost (£'s)">
                     <mat-icon>light_mode</mat-icon>
-                    <span></span>
+                    <span>{{ avg30DayCost$ | async }}</span>
                 </button>
             </mat-card>                
         </mat-card-footer>

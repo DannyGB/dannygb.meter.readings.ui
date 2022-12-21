@@ -4,8 +4,9 @@ import { UserauthGuard } from '../userauth.guard';
 import { ReadingListComponent } from './reading-list/reading-list.component';
 
 const routes: Routes = [{
-    path: 'readings',
-    title: 'Readings', component: ReadingListComponent,
+    path: '',
+    title: 'Readings',
+    component: ReadingListComponent,
     canActivate: [UserauthGuard]
   },
 ];
