@@ -1,21 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { zipWith, takeUntil, Subject, Observable } from 'rxjs';
+import { zipWith, takeUntil, combineLatestWith } from 'rxjs';
 import { ReadingsService } from '../readings.service';
 import { Reading } from '../models/reading.model';
-import { addReading, removeReading } from '../../state/app.actions';
+import { addReading, removeReading, retrievedReadingList } from '../../state/app.actions';
+import { PageEvent } from '@angular/material/paginator';
+import { ListService } from 'src/app/shared/list.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ReadingListService {
-
-  public destroy$: Subject<void> = new Subject<void>();
+export class ReadingListService extends ListService<Reading[]> {
 
   constructor(
     private readingsService: ReadingsService,
     private store: Store,
-  ) { }
+  ) {
+    super();
+   }
 
   public deleteReading(id: string): void {
     this.readingsService
@@ -47,6 +49,30 @@ export class ReadingListService {
           .sort(this.sortByReadingDesc.bind(this))[0].reading : 0;
   }  
 
+  public getReadings(): void {
+    this.pageEvent$.pipe(combineLatestWith(this.sortEvent$, this.filterEvent$))
+    .subscribe((pe: any) => {
+        this.readingsService.getReadings({ 
+            skip: this.getSkip(pe[0]),
+            take: pe[0].pageSize,
+            sortDirection: pe[1].direction,
+            filterText: pe[2].filterText
+        }).pipe(zipWith(this.readingsService.getReadingCount(pe[2].filterText)))
+        .subscribe({
+            next: val => {
+                this.totalReadings$.next(val[1]);
+                this.store.dispatch(retrievedReadingList({ readings: val[0] }))
+                this.loadComplete$.next(val[0]);
+            },
+            error: err => { 
+                this.totalReadings$.next(0);
+                this.store.dispatch(retrievedReadingList({ readings: [] }))
+                this.loadComplete$.next([]);
+            }
+        });
+    });
+  }
+
   private separateDataByRate(readings: Reading[], rate: string): Reading[] {
     return [...readings]
       .filter(e => e.rate.toLocaleLowerCase() == rate)      
@@ -65,4 +91,6 @@ export class ReadingListService {
       ? a.reading > b.reading ? 1 : -1
       : a.reading < b.reading ? 1 : -1
   } 
+
+  private getSkip(pe: PageEvent): number { return pe.pageIndex * pe.pageSize; }
 }

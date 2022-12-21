@@ -93,7 +93,7 @@
 
       <mat-paginator [pageSizeOptions]="pageSizeOptions"
         showFirstLastButtons 
-        [length]="dataSource.totalReadings$ | async"
+        [length]="readingListService.totalReadings$ | async"
         [pageSize]="pageSize"
         (page)="onChangePage($event)"
         aria-label="Select page of readings">

@@ -34,22 +34,25 @@ export class OilReadingsListComponent implements OnInit, OnDestroy {
   public loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   
   constructor(
-    private readingsService: OilReadingsService,
-    private store: Store,
     private dialog: MatDialog,
     private userService: UserService,
-    private oilReadingsListService: OilReadingsListService) { }
+    public oilReadingsListService: OilReadingsListService) { }
 
     public ngOnInit(): void {
-      this.dataSource = new OilReadingDataSource(this.readingsService, this.store);
-      this.dataSource.loadData();
+
+      this.dataSource = new OilReadingDataSource();
+      this.oilReadingsListService.getReadings();
+
       this.userService.getUser()
         .pipe(takeUntil(this.destroy$))
         .subscribe((user: User) => this.user = { name: user.name ?? "", userName: user.userName ?? "" });
 
-      this.dataSource.loadComplete$
+      this.oilReadingsListService.loadComplete$
         .pipe(takeUntil(this.destroy$))
-        .subscribe(() => this.loading$.next(false));
+        .subscribe(data => {
+          this.dataSource.loadData(data);
+          this.loading$.next(false);
+        });
     }
   
     public ngOnDestroy(): void {
@@ -106,16 +109,16 @@ export class OilReadingsListComponent implements OnInit, OnDestroy {
     }
   
     public onSortChange(event: any): void {
-      this.dataSource.sortEvent$.next({ direction: event.direction });
+      this.oilReadingsListService.sortEvent$.next({ direction: event.direction });
     }
   
     public onChangePage(pe: PageEvent): void {
-      this.dataSource.pageEvent$.next(pe);
+      this.oilReadingsListService.pageEvent$.next(pe);
     }
   
     public applyFilter(event: Event): void {
       const filterValue = (event.target as HTMLInputElement).value;
-      this.dataSource.filterEvent$.next({ filterText: filterValue });
+      this.oilReadingsListService.filterEvent$.next({ filterText: filterValue });
     }
   
     public toggleChart(): void {

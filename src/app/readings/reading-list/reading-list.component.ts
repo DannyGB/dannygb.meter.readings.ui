@@ -1,6 +1,4 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { ReadingsService } from '../readings.service';
 import { ReadingsForecastService } from '../readings-forecast.service';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Reading } from '../models/reading.model';
@@ -9,7 +7,7 @@ import { NewReadingData, NewReadingDialog } from '../new-reading/new-reading.com
 import { UUID } from 'angular2-uuid';
 import { DeleteReadingComponent } from '../delete-reading/delete-reading.component';
 import { ReadingDataSource } from '../reading.datasource';
-import { BehaviorSubject, Subject, takeUntil, zipWith } from 'rxjs';
+import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import * as moment from 'moment';
 import { UserService } from 'src/app/login/user.service';
 import { User } from 'src/app/login/models/user.model';
@@ -37,26 +35,27 @@ export class ReadingListComponent implements OnInit, OnDestroy {
   public loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
   constructor(
-    private readingsService: ReadingsService,
     private forecastService: ReadingsForecastService,
-    private readingListService: ReadingListService,
-    private store: Store,
+    public readingListService: ReadingListService,
     private dialog: MatDialog,
     private userService: UserService,
   ) {}
 
   public ngOnInit(): void {
-    this.dataSource = new ReadingDataSource(this.readingsService, this.store);
-    this.dataSource.loadData();
+    
+    this.dataSource = new ReadingDataSource();
+    this.readingListService.getReadings();
+
     this.userService.getUser()
       .pipe(takeUntil(this.destroy$))
       .subscribe(user => this.user = { name: user.name ?? "", userName: user.userName ?? ""})
     ;
 
-    this.dataSource.loadComplete$
+    this.readingListService.loadComplete$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-      this.loading$.next(false);
+      .subscribe(data => {
+        this.dataSource.loadData(data)
+        this.loading$.next(false);
     });
   }
 
@@ -124,16 +123,16 @@ export class ReadingListComponent implements OnInit, OnDestroy {
   }
 
   public onSortChange(event: any): void {
-    this.dataSource.sortEvent$.next({ direction: event.direction });
+    this.readingListService.sortEvent$.next({ direction: event.direction });
   }
 
   public onChangePage(pe: PageEvent): void {
-    this.dataSource.pageEvent$.next(pe);
+    this.readingListService.pageEvent$.next(pe);
   }
 
   public applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filterEvent$.next({ filterText: filterValue });
+    this.readingListService.filterEvent$.next({ filterText: filterValue });
   }
 
   public toggleChart(): void {
