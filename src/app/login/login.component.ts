@@ -3,9 +3,8 @@ import { MsalService, MsalBroadcastService, MSAL_GUARD_CONFIG, MsalGuardConfigur
 import { InteractionStatus, RedirectRequest, EventMessage, EventType, AccountInfo } from '@azure/msal-browser';
 import { Store } from '@ngrx/store';
 import { filter, Subject, takeUntil } from 'rxjs';
-import { setUser } from '../state/app.actions';
-import { selectUser } from '../state/app.selectors';
 import { User } from './models/user.model';
+import { UserService } from './user.service';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +21,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
     private authService: MsalService,
     private msalBroadcastService: MsalBroadcastService,
-    private store: Store) { }
+    private userService: UserService) { }
 
   ngOnDestroy(): void {
     this._destroying$.next(undefined);
@@ -54,8 +53,8 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.checkAndSetActiveAccount();
       })
 
-      this.store.select(selectUser)
-      .subscribe(user => this.user = user);
+      this.userService.getUser()
+        .subscribe(user => this.user = user);
   }
 
   public loginRedirect() {
@@ -93,6 +92,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   private setUser(accountInfo: AccountInfo | null): void {
     const name = accountInfo?.name ?? "";
     const userName = accountInfo?.username ?? "";
-    this.store.dispatch(setUser({ user: { name, userName } as User }));
+    this.userService.setUser({ name, userName });
   }
 }
