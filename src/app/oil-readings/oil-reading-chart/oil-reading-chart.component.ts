@@ -1,16 +1,17 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 import { selectOilReadings } from '../../state/app.selectors';
-import { OilReading } from 'src/app/state/oil-reading.model';
-import { BehaviorSubject, combineLatestWith, mergeWith, zip, zipWith } from 'rxjs';
+import { OilReading } from '../models/oil-reading.model';
+import { BehaviorSubject, combineLatestWith, mergeWith, Subject, takeUntil, zip, zipWith } from 'rxjs';
+import { OilCostGeneratorService } from '../oil-cost-generator.service';
 
 @Component({
   selector: 'app-oil-reading-chart',
   templateUrl: './oil-reading-chart.component.html',
   styleUrls: ['./oil-reading-chart.component.css']
 })
-export class OilReadingChartComponent implements OnInit {
+export class OilReadingChartComponent implements OnInit, OnDestroy {
   
   @Input() public charts: Array<string> = ["line", "pie", "number-panel"];
   @Input("loading") public loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
@@ -23,7 +24,9 @@ export class OilReadingChartComponent implements OnInit {
   public avgDayUsage$: BehaviorSubject<string> = new BehaviorSubject<string>("0");
   public avg30DayCost$: BehaviorSubject<string> = new BehaviorSubject<string>("0");
   public avgDayCost$: BehaviorSubject<string> = new BehaviorSubject<string>("0");
-  public data: any;
+  public lineChartData: Subject<any> = new Subject<any>();
+  private destroy$: Subject<void> = new Subject<void>();
+  
   public options: any = {
     responsive: true,
     maintainAspectRatio: true,
@@ -54,22 +57,13 @@ export class OilReadingChartComponent implements OnInit {
     }
   };
 
-  public donutData: any;
-  public donutOptions: any = {
-    plugins: {
-        legend: {
-            labels: {
-                color: '#ebedef'
-            }
-        }
-    }
-  };
+  constructor(
+    private store: Store,
+    private oilCostGeneratorService: OilCostGeneratorService ) { }
 
-  constructor(private store: Store) { }
-
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.store.select(selectOilReadings)
-      .subscribe((readings: OilReading[]) => {   
+      .subscribe((readings: OilReading[]) => {
         
         if(!readings.length) {
           return;
@@ -78,98 +72,51 @@ export class OilReadingChartComponent implements OnInit {
         const localReadingsData = [...readings]
           .sort((a, b) => a.date < b.date ? -1: 1);
 
-        this.generateLineChartData(localReadingsData);
-        this.generateCostData(localReadingsData);
-        this.generateAveragePerDayData(localReadingsData);
+        this.oilCostGeneratorService.generateLineChartData(localReadingsData, this.colour)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe(data => this.lineChartData.next(data));
+
+        this.oilCostGeneratorService.generateOilCostData(localReadingsData);
+        this.oilCostGeneratorService.generateAveragePerDayData(localReadingsData);
         
       });
 
-      this.loading$.subscribe(val => this.loading = val);
+      this.subscribe();
   }
 
-  private generateAveragePerDayData(readings: OilReading[]): void {
-    const totalCost = readings
-      .flatMap(r => r.cost)
-      .reduce((p, c) => p + c);
-
-
-    const maxDate = readings
-      .flatMap(r => r.date)
-      .reduce((p, c) => p < c ? c : p);
-
-    const minDate = readings
-    .flatMap(r => r.date)
-    .reduce((p, c) => p > c ? c : p);
-
-    const dateDiff = maxDate.diff(minDate, "days");
-
-    if(totalCost <= 0 || dateDiff <= 0) {
-      return;
-    }
-
-    this.avgDayUsage$.next((totalCost / dateDiff).toFixed(2));
-
-  }
-
-  private generateCostData(readings: OilReading[]): void {
-
-    if(!readings || !readings.length) {
-      return;
-    }
-
-    const costs = readings.flatMap(r => {
-      return {
-        cost: r.cost,
-        volume: r.volume
-      }
-    });
-
-    this.maxCost$.next(readings
-      .flatMap(r => r.cost / r.volume)
-      .reduce((p, c) => p > c ? p : c).toFixed(2));
-
-    this.minCost$.next(readings
-      .flatMap(r => r.cost / r.volume)
-      .reduce((p, c) => p > c ? c : p).toFixed(2));
-    
-    const accumulated = costs
-      .reduce((p, c) => {
-        return { 
-          cost: p.cost + c.cost,
-          volume: p.volume + c.volume
-        }
-    });
-    
-    this.avgCost$.next((accumulated.cost / accumulated.volume).toFixed(2));
-
-    this.avgDayUsage$
-      .pipe(combineLatestWith(this.avgCost$))
-      .subscribe(zip => {
-        const avgDayCost = (+zip[1] * +zip[0]).toFixed(2);
-        this.avgDayCost$.next(avgDayCost);
-        this.avg30DayCost$.next((+avgDayCost * 30).toFixed(2));
-      });
-  }
-
-  private generateLineChartData(readings: OilReading[]): void {
-
-    this.data = {
-      labels:  this.generateLabels(readings),
-      datasets: [
-      {
-          label: 'Cost',
-          data: readings.length ? readings.flatMap(reading => reading.cost) : [],
-          borderColor: this.colour
-      }]
-    }
-  }
-
-  private generateLabels(readings: OilReading[]): string[] {
-    return readings
-      .flatMap(reading => (reading.date as moment.Moment).format("DD MMMM YYYY"))
+  public ngOnDestroy(): void {
+    this.destroy$.next();
   }
 
   public isVisible(chartName: string): boolean {
     return this.charts.filter(name => name === chartName).length > 0;
+  }
+
+  private subscribe(): void {
+    this.loading$.subscribe(val => this.loading = val);
+
+      this.oilCostGeneratorService.avg30DayCost$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(val => this.avg30DayCost$.next(val));
+      
+      this.oilCostGeneratorService.avgCost$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(val => this.avgCost$.next(val));
+
+      this.oilCostGeneratorService.avgDayCost$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(val => this.avgDayCost$.next(val));
+
+      this.oilCostGeneratorService.avgDayUsage$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(val => this.avgDayUsage$.next(val));
+
+      this.oilCostGeneratorService.maxCost$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(val => this.maxCost$.next(val));
+
+      this.oilCostGeneratorService.minCost$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(val => this.minCost$.next(val));
   }
 }

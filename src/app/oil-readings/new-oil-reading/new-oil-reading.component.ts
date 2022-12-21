@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { OilReading } from '../../state/oil-reading.model';
+import { OilReading } from '../models/oil-reading.model';
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 
 @Component({

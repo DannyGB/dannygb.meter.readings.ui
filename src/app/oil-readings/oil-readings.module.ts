@@ -12,7 +12,6 @@ import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/m
 import { FormsModule } from '@angular/forms'; 
 import { MAT_DATE_LOCALE } from '@angular/material/core'
 import { HttpClientModule } from '@angular/common/http';
-import { BrowserModule } from '@angular/platform-browser';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -29,16 +28,16 @@ import { OilReadingChartComponent } from './oil-reading-chart/oil-reading-chart.
 import { OilReadingLineChartComponent } from './oil-reading-chart/oil-reading-line-chart/oil-reading-line-chart.component'
 import { SharedUiComponentsModule } from '../shared/components/shared-ui-components/shared-ui-components.module';
 
+
 @NgModule({
   declarations: [
     OilReadingsListComponent,
     NewOilReadingDialog,
     DeleteOilReadingComponent,
     OilReadingChartComponent,
-    OilReadingLineChartComponent
+    OilReadingLineChartComponent,
   ],
   imports: [
-    BrowserModule,
     HttpClientModule,
     CommonModule,
     OilReadingsRoutingModule,

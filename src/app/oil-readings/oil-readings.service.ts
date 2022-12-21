@@ -4,8 +4,7 @@ import * as moment from 'moment';
 import { Observable, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { GetParameters } from '../readings/readings.service';
-import { OilReading } from '../state/oil-reading.model';
-import { Reading } from '../state/reading.model';
+import { OilReading } from './models/oil-reading.model';
 
 @Injectable({
   providedIn: 'root'

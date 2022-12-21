@@ -91,7 +91,7 @@
         <mat-card-content>
             <app-oil-reading-line-chart
                 [loading]="loading$"    
-                [data]="data"
+                [data]="lineChartData | async"
                 [options]="options">
             </app-oil-reading-line-chart>            
         </mat-card-content>

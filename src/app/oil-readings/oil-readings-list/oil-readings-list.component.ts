@@ -1,13 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { OilReadingDataSource } from '../oil-reading.datasource';
-import { User } from 'src/app/state/user.model';
 import { OilReadingsService } from '../oil-readings.service';
 import { selectUser } from 'src/app/state/app.selectors';
 import * as moment from 'moment';
-import { OilReading } from 'src/app/state/oil-reading.model';
+import { OilReading } from '../models/oil-reading.model';
 import { UUID } from 'angular2-uuid';
 import { addOilReading, removeOilReading } from 'src/app/state/app.actions';
 import { PageEvent } from '@angular/material/paginator';
@@ -19,7 +18,7 @@ import { DeleteOilReadingComponent } from '../delete-oil-reading/delete-oil-read
   templateUrl: './oil-readings-list.component.html',
   styleUrls: ['./oil-readings-list.component.css']
 })
-export class OilReadingsListComponent implements OnInit {
+export class OilReadingsListComponent implements OnInit, OnDestroy {
 
   private initialPageSize = 50;
   public pageSize = this.initialPageSize;
@@ -27,7 +26,7 @@ export class OilReadingsListComponent implements OnInit {
   public pageSizeOptions = [5, 10, 20, 50];
   public dataSource!: OilReadingDataSource;
   public chartVisible = true;
-  public user?: User;
+  public user?: { name: string, userName: string };
   private destroy$: Subject<void> = new Subject<void>();
   public forecastApplied: boolean = false;
   public loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
@@ -42,12 +41,12 @@ export class OilReadingsListComponent implements OnInit {
       this.dataSource.loadData();
       this.store.select(selectUser)
         .pipe(takeUntil(this.destroy$))
-        .subscribe(user => this.user = user)
+        .subscribe(user => this.user = { name: user.name ?? "", userName: user.userName ?? "" })
       ;
 
-      this.dataSource.loadComplete$.subscribe(() => {
-        this.loading$.next(false);
-      });
+      this.dataSource.loadComplete$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(() => this.loading$.next(false));
     }
   
     public ngOnDestroy(): void {
@@ -65,7 +64,9 @@ export class OilReadingsListComponent implements OnInit {
         }
       });
   
-      dialogRef.afterClosed().subscribe((result: NewOilReadingData) => {
+      dialogRef.afterClosed()
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((result: NewOilReadingData) => {
         if(!result) {
           return;
         }
@@ -81,6 +82,7 @@ export class OilReadingsListComponent implements OnInit {
   
         if(reading.volume > 0 ) { // TODO: Validation
           this.readingsService.addReading(reading)
+            .pipe(takeUntil(this.destroy$))
             .subscribe((location: any) => {
               this.store.dispatch(addOilReading({ reading }));
           });
@@ -94,7 +96,9 @@ export class OilReadingsListComponent implements OnInit {
         width: "300px"
       });
   
-      dialogRef.afterClosed().subscribe(result => {
+      dialogRef.afterClosed()
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(result => {
         if(result) {
           this.readingsService.deleteReading(id).subscribe((location: any) => {
             this.store.dispatch(removeOilReading({readingId: id}))

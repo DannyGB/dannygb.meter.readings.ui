@@ -4,8 +4,9 @@ import { UserauthGuard } from '../userauth.guard';
 import { OilReadingsListComponent } from './oil-readings-list/oil-readings-list.component';
 
 const routes: Routes = [{
-    path: 'oilreadings',
-    title: 'Oil Readings', component: OilReadingsListComponent,
+    path: '',
+    title: 'Oil Readings', 
+    component: OilReadingsListComponent,
     canActivate: [UserauthGuard]
   },
 ];
