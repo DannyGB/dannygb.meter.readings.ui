@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ReadingsService } from '../readings.service';
-import { addReading, removeReading } from '../../state/app.actions';
+import { ReadingsForecastService } from '../readings-forecast.service';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { Reading } from '../../state/reading.model';
+import { Reading } from '../models/reading.model';
 import { MatDialog } from '@angular/material/dialog';
 import { NewReadingData, NewReadingDialog } from '../new-reading/new-reading.component';
 import { UUID } from 'angular2-uuid';
@@ -11,8 +11,9 @@ import { DeleteReadingComponent } from '../delete-reading/delete-reading.compone
 import { ReadingDataSource } from '../reading.datasource';
 import { BehaviorSubject, Subject, takeUntil, zipWith } from 'rxjs';
 import * as moment from 'moment';
-import { selectUser } from 'src/app/state/app.selectors';
-import { User } from 'src/app/state/user.model';
+import { UserService } from 'src/app/login/user.service';
+import { User } from 'src/app/login/models/user.model';
+import { ReadingListService } from './reading-list.service';
 
 @Component({
   selector: 'app-reading-list',
@@ -37,19 +38,24 @@ export class ReadingListComponent implements OnInit, OnDestroy {
 
   constructor(
     private readingsService: ReadingsService,
+    private forecastService: ReadingsForecastService,
+    private readingListService: ReadingListService,
     private store: Store,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private userService: UserService,
   ) {}
 
   public ngOnInit(): void {
     this.dataSource = new ReadingDataSource(this.readingsService, this.store);
     this.dataSource.loadData();
-    this.store.select(selectUser)
+    this.userService.getUser()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(user => this.user = user)
+      .subscribe(user => this.user = { name: user.name ?? "", userName: user.userName ?? ""})
     ;
 
-    this.dataSource.loadComplete$.subscribe(() => {
+    this.dataSource.loadComplete$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
       this.loading$.next(false);
     });
   }
@@ -67,13 +73,14 @@ export class ReadingListComponent implements OnInit, OnDestroy {
           readingdate: moment()
         },
         nightReading: {},
-        lastDayReading: this.readingsService.getLastDayReading(this.dataSource.data),
-        lastNightReading: this.readingsService.getLastNightReading(this.dataSource.data),
+        lastDayReading: this.readingListService.getLastDayReading(this.dataSource.data),
+        lastNightReading: this.readingListService.getLastNightReading(this.dataSource.data),
         userName: this.user?.userName
       }
     });
 
     dialogRef.afterClosed().subscribe((result: NewReadingData) => {
+      
       if(!result) {
         return;
       }
@@ -97,12 +104,9 @@ export class ReadingListComponent implements OnInit, OnDestroy {
       };
 
       if(dayReading.reading > 0 && nightReading.reading > 0) { // TODO: Validation
-        this.readingsService.addReading(dayReading)
-          .pipe(zipWith(this.readingsService.addReading(nightReading)))
-          .subscribe((location: any) => {
-            this.store.dispatch(addReading({ reading: dayReading }));
-            this.store.dispatch(addReading({ reading: nightReading }));
-        });
+        this.readingListService.addReading(dayReading, nightReading)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe(_ => this.readingListService.dispatchAddReading(dayReading, nightReading));
       }
     });
   }
@@ -115,8 +119,10 @@ export class ReadingListComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result) {
-        this.readingsService.deleteReading(id).subscribe((location: any) => {
-          this.store.dispatch(removeReading({readingId: id}))
+        this.readingListService.deleteReading(id)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((location: any) => {
+            this.readingListService.dispatchRemoveReading(id)
         });
       }
     });
@@ -145,67 +151,6 @@ export class ReadingListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const data = [...this.dataSource.data];
-
-    if(this.forecastApplied) {
-
-      // find last years usage for next month (or nearest) and add that to the list
-
-      const nightData = [...data].filter(reading => {
-        return reading.rate === "Night";
-      }).sort((a,b) => {
-        return a < b ? 1 : -1;
-      });
-      const dayData = [...data].filter(reading => {
-        return reading.rate === "Day";
-      }).sort((a,b) => {
-        return a < b ? 1 : -1;
-      });
-
-      const lastRealNightReading = nightData[0];
-      const lastRealDayReading = dayData[0];
-
-      let lastMonthNight = nightData.findIndex(reading => {
-        const d = moment(moment().add(-1, "y")).add(1, "M");
-        return reading.readingdate.month() === d.month() && reading.readingdate.year() === d.year();
-      });
-
-      let lastMonthDay = dayData.findIndex(reading => {
-        const d = moment(moment().add(-1, "y")).add(1, "M");
-        return reading.readingdate.month() === d.month() && reading.readingdate.year() === d.year();
-      });
-
-      if(!lastMonthNight || !lastMonthDay 
-          || lastMonthNight > (nightData.length-1)
-          || lastMonthDay > (dayData.length-1)) {
-        return;
-      }
-
-      const dayDiff = dayData[lastMonthDay].readingdate.diff(dayData[lastMonthDay+1].readingdate, "days");
-
-      this.store.dispatch(addReading({ reading: {
-        _id: UUID.UUID(),
-        reading: lastRealDayReading.reading + (dayData[lastMonthDay].reading - dayData[lastMonthDay+1].reading),
-        readingdate: moment(lastRealDayReading.readingdate).add(dayDiff, "days"),
-        note: "forecast",
-        rate: "Day",
-        userName: this.user?.userName || ""
-      } }));
-      this.store.dispatch(addReading({ reading: {
-        _id: UUID.UUID(),
-        reading: lastRealNightReading.reading + (nightData[lastMonthNight].reading - nightData[lastMonthNight+1].reading),
-        readingdate: moment(lastRealNightReading.readingdate).add(dayDiff, "days"),
-        note: "forecast",
-        rate: "Night",
-        userName: this.user?.userName || ""
-      } }));    
-    } else {
-      const ids = data.filter(reading => {
-        return reading.note === "forecast";
-      }).flatMap(reading => reading._id)
-      .forEach(id => {
-        this.store.dispatch(removeReading({readingId: id}))
-      });
-    }  
+    this.forecastService.calculateForecast([...this.dataSource.data], this.forecastApplied, this.user);
   }
 }
