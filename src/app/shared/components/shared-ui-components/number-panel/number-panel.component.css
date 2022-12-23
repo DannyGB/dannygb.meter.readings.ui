@@ -3,3 +3,7 @@ div {
     min-height: 100px;
     padding-top: 75px;
 }
+
+div.ripple {
+    margin-left: -90px;
+}
