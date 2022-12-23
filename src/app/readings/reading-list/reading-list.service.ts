@@ -6,6 +6,7 @@ import { Reading } from '../models/reading.model';
 import { addReading, removeReading, retrievedReadingList } from '../../state/app.actions';
 import { PageEvent } from '@angular/material/paginator';
 import { ListService } from 'src/app/shared/list.service';
+import { selectReadings } from 'src/app/state/app.selectors';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,9 @@ export class ReadingListService extends ListService<Reading[]> {
     private store: Store,
   ) {
     super();
+
+    this.store.select(selectReadings)
+      .subscribe((data: Reading[]) => this.loadComplete$.next(data));
    }
 
   public deleteReading(id: string): void {

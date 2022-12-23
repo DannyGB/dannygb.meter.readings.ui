@@ -6,15 +6,24 @@ import { OilReading } from '../models/oil-reading.model';
 import { OilReadingsService } from '../oil-readings.service';
 import { PageEvent } from '@angular/material/paginator';
 import { ListService } from 'src/app/shared/list.service';
+import { selectOilReadings } from 'src/app/state/app.selectors';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OilReadingsListService extends ListService<OilReading[]>{
 
-  constructor(private readingsService: OilReadingsService,
+  constructor(
+    private readingsService: OilReadingsService,
     private store: Store) { 
       super();
+
+      this.store.select(selectOilReadings)
+            .subscribe({
+                next: (data: OilReading[]) => this.loadComplete$.next(data),
+                error: err => console.error(`Error: ${err}`)
+            });
+
     }
 
   public addReading(reading: OilReading): void {
