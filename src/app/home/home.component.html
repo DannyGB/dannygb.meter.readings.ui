@@ -5,18 +5,18 @@
             Electric Readings                
             <mat-icon class="right">electric_meter</mat-icon>                                            
         </mat-card-title>
-        <div  routerLink="/readings">
+        <div routerLink="/readings">
             <img src="/images/meter.png">
         </div>
         <mat-card-content>             
         </mat-card-content>
         <mat-divider></mat-divider>
         <mat-card-actions>
-            <button mat-button matTooltip="Total day units used this year">
+            <button mat-button routerLink="/readings" matTooltip="Total day units used this year">
                 <mat-icon>light_mode</mat-icon>
                 <span>{{ totals?.Day }}</span>
             </button>
-            <button mat-button matTooltip="Total night units used this year">
+            <button mat-button routerLink="/readings" matTooltip="Total night units used this year">
                 <mat-icon>dark_mode</mat-icon>{{ totals?.Night }}
             </button>
         </mat-card-actions>
@@ -34,7 +34,7 @@
         </mat-card-content>
         <mat-divider></mat-divider>
         <mat-card-actions>
-            <button mat-button matTooltip="Avg 30 day cost (£'s)">
+            <button mat-button routerLink="/oil" matTooltip="Avg 30 day cost (£'s)">
                 <mat-icon>light_mode</mat-icon>
                 <span>{{ avg30DayCost$ | async }}</span>
             </button>
