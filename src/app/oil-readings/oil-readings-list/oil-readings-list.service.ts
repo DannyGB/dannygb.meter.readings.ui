@@ -1,4 +1,4 @@
-import { addOilReading, removeOilReading, retrievedOilReadingList } from 'src/app/state/app.actions';
+import { addOilReading, editOilReading, removeOilReading, retrievedOilReadingList } from 'src/app/state/app.actions';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatestWith, takeUntil, zipWith } from 'rxjs';
@@ -25,6 +25,14 @@ export class OilReadingsListService extends ListService<OilReading[]>{
             });
 
     }
+
+
+  public editReading(reading: OilReading): void {
+    this.readingsService
+      .editReading(reading)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(_ => this.store.dispatch(editOilReading({ reading })));
+  }
 
   public addReading(reading: OilReading): void {
     this.readingsService

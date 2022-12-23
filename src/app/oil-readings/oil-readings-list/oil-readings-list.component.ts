@@ -1,19 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Store } from '@ngrx/store';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { OilReadingDataSource } from '../oil-reading.datasource';
-import { OilReadingsService } from '../oil-readings.service';
 import { UserService } from '../../login/user.service';
 import * as moment from 'moment';
 import { OilReading } from '../models/oil-reading.model';
 import { UUID } from 'angular2-uuid';
-import { addOilReading, removeOilReading } from 'src/app/state/app.actions';
 import { PageEvent } from '@angular/material/paginator';
 import { NewOilReadingData, NewOilReadingDialog } from '../new-oil-reading/new-oil-reading.component';
 import { DeleteOilReadingComponent } from '../delete-oil-reading/delete-oil-reading.component';
 import { User } from 'src/app/login/models/user.model';
 import { OilReadingsListService } from './oil-readings-list.service';
+import { EditOilReadingComponent } from '../edit-oil-reading/edit-oil-reading.component';
 
 @Component({
   selector: 'app-oil-readings-list',
@@ -24,7 +22,7 @@ export class OilReadingsListComponent implements OnInit, OnDestroy {
 
   private initialPageSize = 50;
   public pageSize = this.initialPageSize;
-  public columnsToDisplay = ['volume', 'cost', 'date', 'userName', 'note', 'delete'];
+  public columnsToDisplay = ['volume', 'cost', 'date', 'userName', 'note', 'edit', 'delete'];
   public pageSizeOptions = [5, 10, 20, 50];
   public dataSource!: OilReadingDataSource;
   public chartVisible = true;
@@ -106,6 +104,40 @@ export class OilReadingsListComponent implements OnInit, OnDestroy {
           this.oilReadingsListService.deleteReading(id)
         }
       });
+    }
+
+    public editReading(reading: OilReading): void {
+
+      const dialogRef = this.dialog.open(EditOilReadingComponent, {
+        width: "500px",
+        data: {
+          volume: reading.volume,
+          date: reading.date,
+          cost: reading.cost,
+          _id: reading._id,
+          note: reading.note ?? "",
+          userName: reading.userName ?? "",
+        } as OilReading
+      });
+  
+      dialogRef.afterClosed().subscribe((reading: OilReading) => {
+        
+        if(!reading) {
+          return;
+        }
+  
+        if(reading.volume > 0 && reading.cost > 0) { // TODO: Validation
+          this.oilReadingsListService.editReading({
+            volume: Number(reading.volume),
+            date: reading.date,
+            cost: Number(reading.cost),
+            _id: reading._id,
+            note: reading.note,
+            userName: reading.userName
+          });
+        }
+      });
+  
     }
   
     public onSortChange(event: any): void {

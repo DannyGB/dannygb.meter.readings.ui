@@ -56,6 +56,10 @@ export class OilReadingsService {
         );
   }
 
+  public editReading(reading: OilReading): Observable<object> {
+    return this.http.put(`${this.getUrl()}/${reading._id}`, reading);
+  }
+
   private getUrl(): string {
     return `${environment.oilApiUrl}/${this.baseRoute}`;
   }

@@ -37,6 +37,12 @@ export const removeOilReading = createAction(
   '[Reading Collection] Remove Oil Reading',
   props<{ readingId: string }>()
 );
+
+export const editOilReading = createAction(
+  '[Reading Collection] Edit Oil Reading',
+  props<{ reading: OilReading }>()
+);
+ 
  
 export const retrievedOilReadingList = createAction(
   'Retrieve Oil Readings Success',

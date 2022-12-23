@@ -9,7 +9,7 @@
   text-align: center;
 }
 
-.mat-column-delete {
+.mat-column-delete, .mat-column-edit {
   width: 32px;
   border-left: 1px solid currentColor;
   border-right: 1px solid currentColor;

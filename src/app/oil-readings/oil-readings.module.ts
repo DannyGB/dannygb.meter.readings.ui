@@ -27,6 +27,7 @@ import { DeleteOilReadingComponent } from './delete-oil-reading/delete-oil-readi
 import { OilReadingChartComponent } from './oil-reading-chart/oil-reading-chart.component';
 import { OilReadingLineChartComponent } from './oil-reading-chart/oil-reading-line-chart/oil-reading-line-chart.component'
 import { SharedUiComponentsModule } from '../shared/components/shared-ui-components/shared-ui-components.module';
+import { EditOilReadingComponent } from './edit-oil-reading/edit-oil-reading.component';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { SharedUiComponentsModule } from '../shared/components/shared-ui-compone
     DeleteOilReadingComponent,
     OilReadingChartComponent,
     OilReadingLineChartComponent,
+    EditOilReadingComponent,
   ],
   imports: [
     HttpClientModule,
