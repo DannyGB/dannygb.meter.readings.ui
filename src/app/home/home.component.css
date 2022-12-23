@@ -14,3 +14,7 @@ mat-card-content > button {
     display: flex;
     flex-wrap: wrap;
 }
+
+mat-card > div {
+    cursor: pointer;
+}
