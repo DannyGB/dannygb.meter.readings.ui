@@ -16,7 +16,6 @@ import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/m
 import { FormsModule } from '@angular/forms'; 
 import { NewReadingDialog } from './new-reading/new-reading.component';
 import { MAT_DATE_LOCALE } from '@angular/material/core'
-import { DeleteReadingComponent } from './delete-reading/delete-reading.component';
 import { MatSortModule } from '@angular/material/sort';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card'; 
@@ -36,7 +35,6 @@ import { EditReadingComponent } from './edit-reading/edit-reading.component';
     ReadingsComponent,  
     ReadingListComponent,
     NewReadingDialog,
-    DeleteReadingComponent,
     ReadingChartComponent,
     ReadingPieChartComponent,
     ReadingLineChartComponent,

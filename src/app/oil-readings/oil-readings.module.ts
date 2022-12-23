@@ -23,7 +23,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ChartModule } from 'primeng/chart';
 import { NewOilReadingDialog } from './new-oil-reading/new-oil-reading.component';
-import { DeleteOilReadingComponent } from './delete-oil-reading/delete-oil-reading.component';
 import { OilReadingChartComponent } from './oil-reading-chart/oil-reading-chart.component';
 import { OilReadingLineChartComponent } from './oil-reading-chart/oil-reading-line-chart/oil-reading-line-chart.component'
 import { SharedUiComponentsModule } from '../shared/components/shared-ui-components/shared-ui-components.module';
@@ -34,7 +33,6 @@ import { EditOilReadingComponent } from './edit-oil-reading/edit-oil-reading.com
   declarations: [
     OilReadingsListComponent,
     NewOilReadingDialog,
-    DeleteOilReadingComponent,
     OilReadingChartComponent,
     OilReadingLineChartComponent,
     EditOilReadingComponent,

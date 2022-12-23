@@ -8,10 +8,10 @@ import { OilReading } from '../models/oil-reading.model';
 import { UUID } from 'angular2-uuid';
 import { PageEvent } from '@angular/material/paginator';
 import { NewOilReadingData, NewOilReadingDialog } from '../new-oil-reading/new-oil-reading.component';
-import { DeleteOilReadingComponent } from '../delete-oil-reading/delete-oil-reading.component';
 import { User } from 'src/app/login/models/user.model';
 import { OilReadingsListService } from './oil-readings-list.service';
 import { EditOilReadingComponent } from '../edit-oil-reading/edit-oil-reading.component';
+import { SimplePopupComponent } from 'src/app/shared/components/shared-ui-components/simple-popup/simple-popup.component';
 
 @Component({
   selector: 'app-oil-readings-list',
@@ -93,8 +93,12 @@ export class OilReadingsListComponent implements OnInit, OnDestroy {
   
     public deleteReading(id: string) {
   
-      const dialogRef = this.dialog.open(DeleteOilReadingComponent, {
-        width: "300px"
+      const dialogRef = this.dialog.open(SimplePopupComponent, {
+        width: "300px",
+        data: {
+          title: "Delete Confirmation",
+          content: "Do you wish to delete this reading, this cannot be undone?"
+        }
       });
   
       dialogRef.afterClosed()

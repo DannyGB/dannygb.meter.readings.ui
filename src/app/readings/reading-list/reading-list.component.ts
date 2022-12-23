@@ -5,7 +5,7 @@ import { Reading } from '../models/reading.model';
 import { MatDialog } from '@angular/material/dialog';
 import { NewReadingData, NewReadingDialog } from '../new-reading/new-reading.component';
 import { UUID } from 'angular2-uuid';
-import { DeleteReadingComponent } from '../delete-reading/delete-reading.component';
+import { SimplePopupComponent } from 'src/app/shared/components/shared-ui-components/simple-popup/simple-popup.component';
 import { ReadingDataSource } from '../reading.datasource';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import * as moment from 'moment';
@@ -112,8 +112,12 @@ export class ReadingListComponent implements OnInit, OnDestroy {
 
   public deleteReading(id: string) {
 
-    const dialogRef = this.dialog.open(DeleteReadingComponent, {
-      width: "300px"
+    const dialogRef = this.dialog.open(SimplePopupComponent, {
+      width: "300px",
+      data: {
+        title: "Delete Confirmation",
+        content: "Do you wish to delete this reading, this cannot be undone?"
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
