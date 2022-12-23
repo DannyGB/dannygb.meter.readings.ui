@@ -21,10 +21,8 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { ChartModule } from 'primeng/chart';
 import { NewOilReadingDialog } from './new-oil-reading/new-oil-reading.component';
 import { OilReadingChartComponent } from './oil-reading-chart/oil-reading-chart.component';
-import { OilReadingLineChartComponent } from './oil-reading-chart/oil-reading-line-chart/oil-reading-line-chart.component'
 import { SharedUiComponentsModule } from '../shared/components/shared-ui-components/shared-ui-components.module';
 import { EditOilReadingComponent } from './edit-oil-reading/edit-oil-reading.component';
 
@@ -34,7 +32,6 @@ import { EditOilReadingComponent } from './edit-oil-reading/edit-oil-reading.com
     OilReadingsListComponent,
     NewOilReadingDialog,
     OilReadingChartComponent,
-    OilReadingLineChartComponent,
     EditOilReadingComponent,
   ],
   imports: [
@@ -56,7 +53,6 @@ import { EditOilReadingComponent } from './edit-oil-reading/edit-oil-reading.com
     MatRadioModule,
     MatCardModule,
     MatSlideToggleModule,
-    ChartModule,
     MatTabsModule,
     MatGridListModule,
     SharedUiComponentsModule,

@@ -19,10 +19,7 @@ import { MAT_DATE_LOCALE } from '@angular/material/core'
 import { MatSortModule } from '@angular/material/sort';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card'; 
-import { ChartModule } from 'primeng/chart';
 import { ReadingChartComponent } from './reading-chart/reading-chart.component';
-import { ReadingPieChartComponent } from './reading-chart/reading-pie-chart/reading-pie-chart.component';
-import { ReadingLineChartComponent } from './reading-chart/reading-line-chart/reading-line-chart.component'; 
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'; 
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatGridListModule } from '@angular/material/grid-list'; 
@@ -36,8 +33,6 @@ import { EditReadingComponent } from './edit-reading/edit-reading.component';
     ReadingListComponent,
     NewReadingDialog,
     ReadingChartComponent,
-    ReadingPieChartComponent,
-    ReadingLineChartComponent,
     EditReadingComponent,    
   ],
   imports: [
@@ -59,7 +54,6 @@ import { EditReadingComponent } from './edit-reading/edit-reading.component';
     MatRadioModule,
     MatCardModule,
     MatSlideToggleModule,
-    ChartModule,
     MatTabsModule,
     MatGridListModule,
     SharedUiComponentsModule

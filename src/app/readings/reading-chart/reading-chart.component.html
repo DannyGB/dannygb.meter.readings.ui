@@ -33,11 +33,11 @@
             <mat-card-title>Day/Night breakdown</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <app-reading-pie-chart
+            <app-pie-chart
                 [loading]="loading$"
                 [data]="donutData"
                 [options]="donutOptions">
-            </app-reading-pie-chart>
+            </app-pie-chart>
         </mat-card-content>
     </mat-card>
             
@@ -46,11 +46,11 @@
             <mat-card-title>Per day units</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <app-reading-line-chart
+            <app-line-chart
                 [loading]="loading$"
                 [data]="data"
                 [options]="options">
-            </app-reading-line-chart>            
+            </app-line-chart>
         </mat-card-content>
     </mat-card>
     

@@ -5,22 +5,30 @@ import { LoadingRippleComponent } from './loading-ripple/loading-ripple.componen
 import { SimplePopupComponent } from './simple-popup/simple-popup.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import {  MatButtonModule } from '@angular/material/button';
+import { LineChartComponent } from './charts/line-chart/line-chart.component';
+import { ChartModule } from 'primeng/chart';
+import { PieChartComponent } from './charts/pie-chart/pie-chart.component';
 
 @NgModule({
   declarations: [
     NumberPanelComponent,
     LoadingRippleComponent,
-    SimplePopupComponent
+    SimplePopupComponent,
+    LineChartComponent,
+    PieChartComponent
   ],
   exports: [
     NumberPanelComponent,
     LoadingRippleComponent,
     SimplePopupComponent,
+    LineChartComponent,
+    PieChartComponent,
   ],
   imports: [
     CommonModule,
     MatDialogModule,
     MatButtonModule,
+    ChartModule,
   ]
 })
 export class SharedUiComponentsModule { }

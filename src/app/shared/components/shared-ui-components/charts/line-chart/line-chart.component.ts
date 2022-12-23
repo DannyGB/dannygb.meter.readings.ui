@@ -1,13 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'app-oil-reading-line-chart',
-  templateUrl: './oil-reading-line-chart.component.html',
-  styleUrls: ['./oil-reading-line-chart.component.css']
+  selector: 'app-line-chart',
+  templateUrl: './line-chart.component.html',
+  styleUrls: ['./line-chart.component.css']
 })
-export class OilReadingLineChartComponent implements OnInit {
-
+export class LineChartComponent {
   @Input() data: any;
   @Input() options: any;
   @Input("loading") public loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -19,5 +18,4 @@ export class OilReadingLineChartComponent implements OnInit {
   ngOnInit(): void {
     this.loading$.subscribe(val => this.loading = val);
   }
-
 }
