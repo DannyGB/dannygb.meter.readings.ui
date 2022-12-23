@@ -65,6 +65,10 @@ export class ReadingsService {
       .pipe(map((location) => location || ""));
   }
 
+  public editReading(reading: Reading): Observable<object> {
+    return this.http.put(`${this.getUrl()}/${reading._id}`, reading);
+  }
+
   public deleteReading(id: string): Observable<object> {
     return this.http.delete(`${this.getUrl()}/${id}`);
   }

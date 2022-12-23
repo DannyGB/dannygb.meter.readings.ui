@@ -12,6 +12,7 @@ import * as moment from 'moment';
 import { UserService } from 'src/app/login/user.service';
 import { User } from 'src/app/login/models/user.model';
 import { ReadingListService } from './reading-list.service';
+import { EditReadingComponent } from '../edit-reading/edit-reading.component';
 
 @Component({
   selector: 'app-reading-list',
@@ -25,7 +26,7 @@ export class ReadingListComponent implements OnInit, OnDestroy {
 
   private initialPageSize = 50;
   public pageSize = this.initialPageSize;
-  public columnsToDisplay = ['rate', 'reading', 'readingdate', 'userName', 'note', 'delete'];
+  public columnsToDisplay = ['rate', 'reading', 'readingdate', 'userName', 'note', 'edit', 'delete'];
   public pageSizeOptions = [5, 10, 20, 50];
   public dataSource!: ReadingDataSource;
   public chartVisible = true;
@@ -120,6 +121,40 @@ export class ReadingListComponent implements OnInit, OnDestroy {
         this.readingListService.deleteReading(id);        
       }
     });
+  }
+
+  public editReading(reading: Reading): void {
+
+    const dialogRef = this.dialog.open(EditReadingComponent, {
+      width: "500px",
+      data: {
+        reading: reading.reading,
+        readingdate: reading.readingdate,
+        rate: reading.rate,
+        _id: reading._id,
+        note: reading.note ?? "",
+        userName: reading.userName ?? "",
+      } as Reading
+    });
+
+    dialogRef.afterClosed().subscribe((reading: Reading) => {
+      
+      if(!reading) {
+        return;
+      }
+
+      if(reading.reading > 0) { // TODO: Validation
+        this.readingListService.editReading({
+          reading: Number(reading.reading),
+          readingdate: reading.readingdate,
+          rate: reading.rate,
+          _id: reading._id,
+          note: reading.note,
+          userName: reading.userName
+        });
+      }
+    });
+
   }
 
   public onSortChange(event: any): void {

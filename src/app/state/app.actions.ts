@@ -12,6 +12,11 @@ export const removeReading = createAction(
   '[Reading Collection] Remove Reading',
   props<{ readingId: string }>()
 );
+
+export const editReading = createAction(
+  '[Reading Collection] Edit Reading',
+  props<{ reading: Reading }>()
+);
  
 export const retrievedReadingList = createAction(
   'Retrieve Readings Success',

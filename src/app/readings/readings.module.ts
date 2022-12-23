@@ -29,6 +29,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatGridListModule } from '@angular/material/grid-list'; 
 import { SharedUiComponentsModule } from '../shared/components/shared-ui-components/shared-ui-components.module';
 import { CommonModule } from '@angular/common';
+import { EditReadingComponent } from './edit-reading/edit-reading.component';
 
 @NgModule({
   declarations: [  
@@ -38,7 +39,8 @@ import { CommonModule } from '@angular/common';
     DeleteReadingComponent,
     ReadingChartComponent,
     ReadingPieChartComponent,
-    ReadingLineChartComponent,    
+    ReadingLineChartComponent,
+    EditReadingComponent,    
   ],
   imports: [
     CommonModule,

@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { zipWith, takeUntil, combineLatestWith } from 'rxjs';
 import { ReadingsService } from '../readings.service';
 import { Reading } from '../models/reading.model';
-import { addReading, removeReading, retrievedReadingList } from '../../state/app.actions';
+import { addReading, editReading, removeReading, retrievedReadingList } from '../../state/app.actions';
 import { PageEvent } from '@angular/material/paginator';
 import { ListService } from 'src/app/shared/list.service';
 import { selectReadings } from 'src/app/state/app.selectors';
@@ -22,6 +22,13 @@ export class ReadingListService extends ListService<Reading[]> {
     this.store.select(selectReadings)
       .subscribe((data: Reading[]) => this.loadComplete$.next(data));
    }
+
+  public editReading(reading: Reading): void {
+    this.readingsService
+      .editReading(reading)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(_ => this.store.dispatch(editReading({reading: reading})));
+  }
 
   public deleteReading(id: string): void {
     this.readingsService

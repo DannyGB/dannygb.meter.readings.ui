@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { addOilReading, addReading, removeOilReading, removeReading, retrievedOilReadingList, retrievedReadingList, setUser } from './app.actions';
+import { addOilReading, addReading, editReading, removeOilReading, removeReading, retrievedOilReadingList, retrievedReadingList, setUser } from './app.actions';
 import { OilReading } from '../oil-readings/models/oil-reading.model';
 import { Reading } from '../readings/models/reading.model';
 import { User } from '../login/models/user.model';
@@ -21,6 +21,10 @@ export const readingsReducer = createReducer(
   }),
   on(removeReading, (state, { readingId }) => {
     return [...state.filter(e => e._id !== readingId)];
+  }),
+  on(editReading, (state, { reading }) => {
+    const s = [...state].filter(e => e._id !== reading._id);
+    return [reading, ...s];
   })
 );
 

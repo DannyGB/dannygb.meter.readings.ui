@@ -1,0 +1,29 @@
+<form #readingForm="ngForm">
+    <div mat-dialog-content>
+      
+      <p>Please amend reading:</p>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Reading</mat-label>    
+        <input inputmode="numeric" matInput name="reading" [required]="true" [(ngModel)]="data.reading">        
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Date</mat-label>    
+        <input matInput disabled="disabled" name="readingdate" [required]="true" [matDatepicker]="picker" [(ngModel)]="data.readingdate">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker [disabled]="true"></mat-datepicker>
+      </mat-form-field>
+      
+      <mat-form-field appearance="fill">
+        <mat-label>Note</mat-label>    
+        <textarea matInput name="note" [(ngModel)]="data.note"></textarea>
+      </mat-form-field>
+    </div>
+  
+    <div mat-dialog-actions>
+      <button type="submit" mat-button [mat-dialog-close]="data" cdkFocusInitial [disabled]="!readingForm.form.valid">Ok</button>
+      <button mat-button (click)="onNoClick()">Cancel</button>
+    </div>
+  
+  </form>
